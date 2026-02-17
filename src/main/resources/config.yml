@@ -1,0 +1,28 @@
+#######################################################################
+#                          ShyGuild                                   #
+# 		            	   by Shynixn							      #
+#######################################################################
+
+############################
+# Language settings
+############################
+language: "en_us"
+
+############################
+# Command settings
+############################
+commands:
+  shyguild:
+    aliases:
+      - "sguild"
+
+############################
+# Global Guild Settings
+############################
+global:
+  # When a new player joins the server, after how many seconds are the guilds loaded.
+  joinDelaySeconds: 3
+  # Maximum amount of guilds a player can be in at the same time.
+  maxJoinGuildsPerPlayer: 3
+  # Maximum amount of guilds a player can create.
+  maxCreateGuildsPerPlayer: 1

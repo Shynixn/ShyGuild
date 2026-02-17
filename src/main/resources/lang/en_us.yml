@@ -1,0 +1,36 @@
+# All language key identifiers.
+shyGuildPlayerNotFoundMessage:
+  # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
+  # Please notice that some messages do only support chat.
+  type: "CHAT"
+  # The primary text to be sent.
+  text: "[&9ShyGuild&f] &cPlayer %shyguild_param_1% not found."
+  # Only available for type "TITLE". Adds a subTitle.
+  subTitle: ""
+  # Only available for type: "TITLE". Adds a fade in effect.
+  fadeInTicks: 20
+  # Only available for type: "TITLE". Adds a stay effect.
+  stayTicks: 60
+  # Only available for type: "TITLE". Adds a fade out effect.
+  fadeOutTicks: 20
+shyGuildNoPermissionCommand:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] &cYou do not have permission to execute this command."
+shyGuildReloadCommandHint:
+  type: "CHAT"
+  text: "Reloads all scoreboards and configuration."
+shyGuildReloadMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Reloaded all scoreboards and configuration."
+shyGuildCommonErrorMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f]&c A problem occurred. Check the console log for details."
+shyGuildCommandSenderHasToBePlayer:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] The command sender has to be a player if you do not specify the optional player argument."
+shyGuildCommandUsage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Use /shyguild help to see more info about the plugin."
+shyGuildCommandDescription:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] All commands for the ShyGuild plugin."

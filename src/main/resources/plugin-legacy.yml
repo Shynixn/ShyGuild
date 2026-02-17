@@ -1,0 +1,5 @@
+name: ShyGuild
+version: 1.0.0
+author: Shynixn
+main: com.github.shynixn.shyguild.ShyGuildPlugin
+softdepend: [ PlaceholderAPI, LuckPerms]

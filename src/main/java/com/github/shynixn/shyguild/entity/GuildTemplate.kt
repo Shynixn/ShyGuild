@@ -2,7 +2,7 @@ package com.github.shynixn.shyguild.entity
 
 import com.github.shynixn.mcutils.common.repository.Element
 
-class ShyGuildTemplate : Element {
+class GuildTemplate : Element {
     /**
      * Unique Identifier of the element.
      */

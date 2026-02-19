@@ -10,9 +10,9 @@ import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
-import com.github.shynixn.mcutils.worldguard.WorldGuardService
-import com.github.shynixn.mcutils.worldguard.WorldGuardServiceImpl
+import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
+import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.enumeration.PlaceHolder
 import com.github.shynixn.shyguild.impl.commandexecutor.ShyGuildCommandExecutor
 import com.github.shynixn.shyguild.impl.listener.ShyGuildListener
@@ -27,9 +27,6 @@ import kotlin.coroutines.CoroutineContext
 class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
     private val prefix: String = ChatColor.BLUE.toString() + "[ShyGuild] " + ChatColor.WHITE
     private var module: DependencyInjectionModule? = null
-    private var worldGuardService: WorldGuardService? = null
-
-    private
 
     companion object {
         private val areLegacyVersionsIncluded: Boolean by lazy {
@@ -115,7 +112,8 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
         val plugin = this
         val settings = ShyGuildSettings { settings ->
             settings.joinDelaySeconds = plugin.config.getInt("global.joinDelaySeconds")
-            settings.checkForChangeChangeSeconds = plugin.config.getInt("global.checkForChangeSeconds")
+            settings.maxJoinGuildsPerPlayer = plugin.config.getInt("global.maxJoinGuildsPerPlayer")
+            settings.maxCreateGuildsPerPlayer = plugin.config.getInt("global.maxCreateGuildsPerPlayer")
         }
         settings.reload()
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
@@ -123,7 +121,6 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
             this,
             settings,
             language,
-            worldGuardService!!,
             placeHolderService
         ).build()
 
@@ -138,9 +135,9 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
 
         // Register CommandExecutor
         module!!.getService<ShyGuildCommandExecutor>()
-        val scoreboardService = module!!.getService<ScoreboardService>()
+        val templateService = module!!.getService<CacheRepository<GuildTemplate>>()
         plugin.launch {
-            scoreboardService.reload()
+            templateService.getAll()
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled ShyGuild " + plugin.description.version + " by Shynixn")
         }
     }

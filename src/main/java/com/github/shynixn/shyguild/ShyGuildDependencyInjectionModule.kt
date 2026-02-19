@@ -13,12 +13,19 @@ import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.repository.CachedRepositoryImpl
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.repository.YamlFileRepositoryImpl
+import com.github.shynixn.mcutils.database.api.CachePlayerRepository
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.database.api.SqlConnectionService
+import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
+import com.github.shynixn.mcutils.database.impl.CachedPlayerDataRepositoryImpl
+import com.github.shynixn.mcutils.database.impl.PlayerDataSqlRepositoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
-import com.github.shynixn.mcutils.worldguard.WorldGuardService
+import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.contract.ShyGuildLanguage
-import com.github.shynixn.shyguild.entity.ShyGuildTemplate
+import com.github.shynixn.shyguild.entity.PlayerInformation
+import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import com.github.shynixn.shyguild.impl.commandexecutor.ShyGuildCommandExecutor
 import com.github.shynixn.shyguild.impl.listener.ShyGuildListener
@@ -28,37 +35,59 @@ import org.bukkit.plugin.ServicePriority
 
 class ShyGuildDependencyInjectionModule(
     private val plugin: Plugin,
+    private val coroutineHandler: CoroutineHandler,
     private val settings: ShyGuildSettings,
     private val language: ShyGuildLanguage,
-    private val worldGuardService: WorldGuardService,
-    private val placeHolderService: PlaceHolderService
+    private val placeHolderService: PlaceHolderService,
+    private val sqlConnectionService: SqlConnectionService
 ) {
     fun build(): DependencyInjectionModule {
         val module = DependencyInjectionModule()
 
         // Params
         module.addService<Plugin>(plugin)
-        module.addService<CoroutineHandler>(plugin)
+        module.addService<CoroutineHandler>(coroutineHandler)
         module.addService<ShyGuildLanguage>(language)
         module.addService<ShyGuildSettings>(settings)
         module.addService<PlaceHolderService>(placeHolderService)
-        module.addService<WorldGuardService>(worldGuardService)
 
         // Repositories
-        val templateRepositoryImpl = YamlFileRepositoryImpl<ShyGuildTemplate>(
-            plugin,
-            "guild",
-            plugin.dataFolder.toPath().resolve("guild"),
-            settings.defaultScoreboards,
-            emptyList(),
-            object : TypeReference<ShyGuildTemplate>() {})
-        val cacheTemplateRepository = CachedRepositoryImpl(templateRepositoryImpl)
-        module.addService<Repository<ShyGuildTemplate>>(cacheTemplateRepository)
-        module.addService<CacheRepository<ShyGuildTemplate>>(cacheTemplateRepository)
+        module.addService<Repository<GuildTemplate>> {
+            module.getService<CacheRepository<GuildTemplate>>()
+        }
+        module.addService<CacheRepository<GuildTemplate>> {
+            CachedRepositoryImpl(
+                YamlFileRepositoryImpl<GuildTemplate>(
+                    plugin,
+                    "guild",
+                    plugin.dataFolder.toPath().resolve("guild"),
+                    settings.defaultTemplates,
+                    emptyList(),
+                    object : TypeReference<GuildTemplate>() {}
+                ))
+        }
+        module.addService<PlayerDataRepository<PlayerInformation>> {
+            module.getService<CachePlayerRepository<PlayerInformation>>()
+        }
+        module.addService<CachePlayerRepository<PlayerInformation>> {
+            AutoSavePlayerDataRepositoryImpl(
+                1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
+                CachedPlayerDataRepositoryImpl(
+                    PlayerDataSqlRepositoryImpl(
+                        "${plugin.name}GuildPlayer",
+                        plugin.config.getLong("database.readDelayMs"),
+                        object : TypeReference<PlayerInformation>() {},
+                        sqlConnectionService
+                    )
+                ),
+                coroutineHandler
+            )
+        }
 
         // Services
         module.addService<ShyGuildCommandExecutor> {
             ShyGuildCommandExecutor(
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),
@@ -72,14 +101,6 @@ class ShyGuildDependencyInjectionModule(
         }
         module.addService<ShyGuildListener> {
             ShyGuildListener(module.getService(), module.getService(), module.getService())
-        }
-        module.addService<ScoreboardFactory> {
-            ScoreboardFactoryImpl(module.getService(), module.getService(), module.getService())
-        }
-        module.addService<ScoreboardService> {
-            ScoreboardServiceImpl(
-                module.getService(), module.getService(), module.getService(), module.getService(), module.getService()
-            )
         }
         module.addService<ConfigurationService> {
             ConfigurationServiceImpl(module.getService())
@@ -96,10 +117,7 @@ class ShyGuildDependencyInjectionModule(
 
         // Developer Api
         Bukkit.getServicesManager().register(
-            ScoreboardService::class.java, module.getService<ScoreboardService>(), plugin, ServicePriority.Normal
-        )
-        Bukkit.getServicesManager().register(
-            ScoreboardFactory::class.java, module.getService<ScoreboardFactory>(), plugin, ServicePriority.Normal
+            GuildService::class.java, module.getService<GuildService>(), plugin, ServicePriority.Normal
         )
 
         return module

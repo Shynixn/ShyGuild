@@ -10,9 +10,9 @@ class ShyGuildLanguageImpl : ShyGuildLanguage {
 
  override var shyGuildNoPermissionCommand = LanguageItem("[&9ShyGuild&f] &cYou do not have permission to execute this command.")
 
- override var shyGuildReloadCommandHint = LanguageItem("Reloads all scoreboards and configuration.")
+ override var shyGuildReloadCommandHint = LanguageItem("Reloads all guilds and configuration.")
 
- override var shyGuildReloadMessage = LanguageItem("[&9ShyGuild&f] Reloaded all scoreboards and configuration.")
+ override var shyGuildReloadMessage = LanguageItem("[&9ShyGuild&f] Reloaded all guilds and configuration.")
 
  override var shyGuildCommonErrorMessage = LanguageItem("[&9ShyGuild&f]&c A problem occurred. Check the console log for details.")
 

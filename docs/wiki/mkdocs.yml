@@ -5,7 +5,7 @@ nav:
   - 'ShyGuild Wiki':
       - Introduction: README.md
       - Permission: permission.md
-      - How to create a scoreboard: installation.md
+      - How to create guilds: installation.md
       - Commands: commands.md
 theme:
   name: material

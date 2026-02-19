@@ -29,7 +29,7 @@ class ShyGuildListener(
     @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
         plugin.launch {
-            guildService.unloadGuild(event.player)
+            guildService.cleanCache(event.player)
         }
     }
 }

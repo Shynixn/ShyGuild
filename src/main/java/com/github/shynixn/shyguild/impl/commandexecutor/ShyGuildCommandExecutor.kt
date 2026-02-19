@@ -13,7 +13,7 @@ import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.contract.ShyGuildLanguage
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
-import com.github.shynixn.shyguild.entity.ShyGuildTemplate
+import com.github.shynixn.shyguild.entity.GuildTemplate
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -26,8 +26,8 @@ class ShyGuildCommandExecutor(
     private val guildService: GuildService,
     private val language: ShyGuildLanguage,
     private val chatMessageService: ChatMessageService,
-    private val guildTemplateRepository: CacheRepository<ShyGuildTemplate>,
-    private val guildMetaRepository: CacheRepository<ShyGuildTemplate>,
+    private val guildTemplateRepository: CacheRepository<GuildTemplate>,
+    private val guildMetaRepository: CacheRepository<GuildTemplate>,
     private val placeHolderService: PlaceHolderService,
     coroutineHandler: CoroutineHandler,
     commandService: CommandService

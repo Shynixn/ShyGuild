@@ -17,11 +17,41 @@ commands:
       - "sguild"
 
 ############################
-# Global Guild Settings
+# Database
+############################
+database:
+  # The data of a player is automatically saved when the player quits. You can additionally configure a saving interval for all cached data.
+  autoSaveIntervalMinutes: 5
+  # An artificial delay for read requests to the database in milliseconds. This can be used in server networks where multiple servers share the same database.
+  # If the data is not in sync when switching between servers, try increasing this delay in steps e.g. 50, 100, 250, 500, 1000.
+  readDelayMs: 0
+  # The type of database to use. Possible values: sqlite, mysql
+  type: "sqlite"
+  # The JDBC properties are only used for type 'mysql'
+  jdbc:
+    # Replace localhost with your server name, 3306 with your port, ShyGuild with your database name.
+    url: "jdbc:mysql://localhost:3306/ShyGuild"
+    # Username of your database.
+    username: ""
+    # Password of your database.
+    password: ""
+    # Additional database properties. ShyGuild uses HikariCP (https://github.com/brettwooldridge/HikariCP) to cache SQL connections.
+    # You may want to customize these depending on the size of your player base and your database performance.
+    properties:
+      - "useSSL=true"
+      - "maximumPoolSize=5"
+      - "cachePrepStmts=true"
+      - "prepStmtCacheSize=250"
+      - "prepStmtCacheSqlLimit=2048"
+
+############################
+# ShyGuild Guild Settings
 ############################
 global:
   # When a new player joins the server, after how many seconds are the guilds loaded.
   joinDelaySeconds: 3
+  # Synchronize guild data every x seconds. If you are using a server network, this ensures changes to guilds on one server are synchronized to the other servers. This feature requires MySQL.
+  synchronizeGuildsSeconds: 300
   # Maximum amount of guilds a player can be in at the same time.
   maxJoinGuildsPerPlayer: 3
   # Maximum amount of guilds a player can create.

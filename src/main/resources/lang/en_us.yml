@@ -18,10 +18,10 @@ shyGuildNoPermissionCommand:
   text: "[&9ShyGuild&f] &cYou do not have permission to execute this command."
 shyGuildReloadCommandHint:
   type: "CHAT"
-  text: "Reloads all scoreboards and configuration."
+  text: "Reloads all guilds and configuration."
 shyGuildReloadMessage:
   type: "CHAT"
-  text: "[&9ShyGuild&f] Reloaded all scoreboards and configuration."
+  text: "[&9ShyGuild&f] Reloaded all guilds and configuration."
 shyGuildCommonErrorMessage:
   type: "CHAT"
   text: "[&9ShyGuild&f]&c A problem occurred. Check the console log for details."

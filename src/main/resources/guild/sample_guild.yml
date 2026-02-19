@@ -9,6 +9,7 @@ roles:
   - name: "Owner"
     # Permissions that are assigned to players with this role. Permissions require the plugin LuckPerms to be installed.
     allowPermissions:
+      - "blockball.club.join.*" # TODO: Allow direct attaching only allow when teams are empty. Only when the owner gives permission to this guild to join another arena.
       - "shyguild.guild.%shyguild_guild_name%.delete"
       - "shyguild.guild.%shyguild_guild_name%.invite"
       - "shyguild.guild.%shyguild_guild_name%.kick"

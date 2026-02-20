@@ -1,10 +1,13 @@
 package com.github.shynixn.shyguild.impl.service
 
 import com.github.shynixn.mcutils.common.CoroutineHandler
+import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
 import com.github.shynixn.shyguild.contract.GuildService
+import com.github.shynixn.shyguild.contract.PermissionPluginService
 import com.github.shynixn.shyguild.entity.GuildMeta
+import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.entity.PlayerInformation
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import kotlinx.coroutines.delay
@@ -15,7 +18,9 @@ class GuildServiceImpl(
     private val settings: ShyGuildSettings,
     coroutineHandler: CoroutineHandler,
     private val guildMetaSqlRepository: GuildMetaSqlRepository,
-    private val cachePlayerDataRepository: CachePlayerRepository<PlayerInformation>
+    private val cachePlayerDataRepository: CachePlayerRepository<PlayerInformation>,
+    private val permissionPluginService: PermissionPluginService,
+    private val templateService: CacheRepository<GuildTemplate>
 ) : GuildService {
     private var isDisposed = false
     private var guilds = HashMap<String, GuildMeta>()
@@ -68,7 +73,7 @@ class GuildServiceImpl(
 
             val loadedGuild = guildMetaSqlRepository.getByName(guildName)
             if (loadedGuild != null) {
-                guilds[guildName] = loadedGuild
+                refreshGuild(loadedGuild)
                 result.add(loadedGuild)
             } else {
                 // Guild was deleted.
@@ -107,6 +112,30 @@ class GuildServiceImpl(
         }
 
         cachePlayerDataRepository.clearByPlayer(player)
+    }
+
+    override suspend fun saveGuild(guild: GuildMeta) {
+        if (!guilds.containsKey(guild.name)) {
+            refreshGuild(guild)
+        }
+
+        guildMetaSqlRepository.save(guild)
+    }
+
+    override suspend fun deleteGuild(
+        owner: Player,
+        guild: GuildMeta
+    ) {
+        val playerInformation = cachePlayerDataRepository.getByPlayer(owner) ?: return
+        playerInformation.guilds.remove(guild.name)
+        permissionPluginService.deletePermissions(guild)
+        guildMetaSqlRepository.delete(guild)
+    }
+
+    override suspend fun refreshGuild(guild: GuildMeta) {
+        guild.template = templateService.getAll().firstOrNull { e -> e.name == guild.templateName }
+        guilds[guild.name] = guild
+        permissionPluginService.createOrUpdatePermissions(guild)
     }
 
     override fun close() {

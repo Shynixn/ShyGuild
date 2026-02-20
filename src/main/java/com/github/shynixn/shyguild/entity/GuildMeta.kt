@@ -1,5 +1,6 @@
 package com.github.shynixn.shyguild.entity
 
+import com.github.shynixn.fasterxml.jackson.annotation.JsonIgnore
 import com.github.shynixn.mcutils.common.repository.Element
 
 class GuildMeta : Element {
@@ -21,15 +22,26 @@ class GuildMeta : Element {
     /**
      * How the name was created with color codes.
      */
-    var displayNameColor : String = ""
+    var displayNameColor: String = ""
 
     /**
      * Name of the template.
      */
-    var template: String = ""
+    var templateName: String = ""
 
     /**
      * All guids members of the guild.
      */
     var members: List<GuildMemberMeta> = ArrayList()
+
+    /**
+     * Additional role modifications.
+     */
+    var roleModifications: List<GuildRoleTemplate> = ArrayList()
+
+    /**
+     * Template
+     */
+    @JsonIgnore
+    var template: GuildTemplate? = null
 }

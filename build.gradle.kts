@@ -13,12 +13,14 @@ version = "1.12.1"
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2026")) // All MCUTILS libraries are private and not OpenSource.
 }
 
 dependencies {
     // Compile Only
     compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("net.luckperms:api:5.4")
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0")

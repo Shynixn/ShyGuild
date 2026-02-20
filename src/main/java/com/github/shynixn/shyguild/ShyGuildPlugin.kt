@@ -11,6 +11,7 @@ import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
 import com.github.shynixn.mcutils.common.repository.CacheRepository
+import com.github.shynixn.mcutils.database.impl.SqliteConnectionServiceImpl
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.enumeration.PlaceHolder
@@ -111,17 +112,23 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
         // Module
         val plugin = this
         val settings = ShyGuildSettings { settings ->
+            settings.commandAliases = plugin.config.getStringList("commands.shyguild.aliases")
             settings.joinDelaySeconds = plugin.config.getInt("global.joinDelaySeconds")
             settings.maxJoinGuildsPerPlayer = plugin.config.getInt("global.maxJoinGuildsPerPlayer")
             settings.maxCreateGuildsPerPlayer = plugin.config.getInt("global.maxCreateGuildsPerPlayer")
+            settings.synchronizeGuildsSeconds = plugin.config.getInt("global.synchronizeGuildsSeconds")
         }
         settings.reload()
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
+        val sqlConnectionService =
+            SqliteConnectionServiceImpl(plugin.dataFolder.toPath().resolve("ShyGuild.sqlite"), plugin.logger)
         this.module = ShyGuildDependencyInjectionModule(
+            this,
             this,
             settings,
             language,
-            placeHolderService
+            placeHolderService,
+            sqlConnectionService
         ).build()
 
         // Register PlaceHolders

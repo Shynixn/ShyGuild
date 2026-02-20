@@ -22,13 +22,20 @@ import com.github.shynixn.mcutils.database.impl.PlayerDataSqlRepositoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
+import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
 import com.github.shynixn.shyguild.contract.GuildService
+import com.github.shynixn.shyguild.contract.PermissionPluginService
 import com.github.shynixn.shyguild.contract.ShyGuildLanguage
+import com.github.shynixn.shyguild.entity.GuildMeta
 import com.github.shynixn.shyguild.entity.PlayerInformation
 import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import com.github.shynixn.shyguild.impl.commandexecutor.ShyGuildCommandExecutor
 import com.github.shynixn.shyguild.impl.listener.ShyGuildListener
+import com.github.shynixn.shyguild.impl.service.EmptyPermissionPluginServiceImpl
+import com.github.shynixn.shyguild.impl.service.GuildMetaSqlRepositoryImpl
+import com.github.shynixn.shyguild.impl.service.GuildServiceImpl
+import com.github.shynixn.shyguild.impl.service.LuckPermsPermissionServiceImpl
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.ServicePriority
@@ -63,25 +70,27 @@ class ShyGuildDependencyInjectionModule(
                     plugin.dataFolder.toPath().resolve("guild"),
                     settings.defaultTemplates,
                     emptyList(),
-                    object : TypeReference<GuildTemplate>() {}
-                ))
+                    object : TypeReference<GuildTemplate>() {})
+            )
         }
         module.addService<PlayerDataRepository<PlayerInformation>> {
             module.getService<CachePlayerRepository<PlayerInformation>>()
         }
         module.addService<CachePlayerRepository<PlayerInformation>> {
             AutoSavePlayerDataRepositoryImpl(
-                1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
-                CachedPlayerDataRepositoryImpl(
+                1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"), CachedPlayerDataRepositoryImpl(
                     PlayerDataSqlRepositoryImpl(
                         "${plugin.name}GuildPlayer",
                         plugin.config.getLong("database.readDelayMs"),
                         object : TypeReference<PlayerInformation>() {},
                         sqlConnectionService
                     )
-                ),
-                coroutineHandler
+                ), coroutineHandler
             )
+        }
+        module.addService<GuildMetaSqlRepository> {
+            GuildMetaSqlRepositoryImpl(
+                "${plugin.name}Guild", sqlConnectionService, object : TypeReference<GuildMeta>() {})
         }
 
         // Services
@@ -101,6 +110,23 @@ class ShyGuildDependencyInjectionModule(
         }
         module.addService<ShyGuildListener> {
             ShyGuildListener(module.getService(), module.getService(), module.getService())
+        }
+        module.addService<GuildService> {
+            GuildServiceImpl(
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
+        }
+        module.addService<PermissionPluginService> {
+            if (plugin.server.pluginManager.getPlugin("LuckPerms") != null) {
+                LuckPermsPermissionServiceImpl(module.getService())
+            } else {
+                EmptyPermissionPluginServiceImpl()
+            }
         }
         module.addService<ConfigurationService> {
             ConfigurationServiceImpl(module.getService())

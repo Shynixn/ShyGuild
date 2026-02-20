@@ -13,4 +13,19 @@ interface GuildService : AutoCloseable {
      * Unloads all guilds of a player if no other player online has those guilds loaded. This should be called when a player leaves the server.
      */
     suspend fun cleanCache(player: Player)
+
+    /**
+     * Save the given guild.
+     */
+    suspend fun saveGuild(guild: GuildMeta)
+
+    /**
+     * Deletes an entire guild.
+     */
+    suspend fun deleteGuild(owner : Player, guild: GuildMeta)
+
+    /**
+     * Refreshes permissions and template cache for the given guild.
+     */
+    suspend fun refreshGuild(guild: GuildMeta)
 }

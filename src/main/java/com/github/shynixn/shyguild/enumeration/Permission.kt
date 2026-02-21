@@ -8,4 +8,5 @@ enum class Permission(val text: String) {
     GUILD_ADD_ROLE("shyguild.guild.<guild>.role.add.<role>"),
     GUILD_REMOVE_ROLE("shyguild.guild.<guild>.role.remove.<role>"),
     GUILD_LIST_ROLE("shyguild.guild.<guild>.role.list"),
+    DELETE("shyguild.guild.<guild>.delete")
 }

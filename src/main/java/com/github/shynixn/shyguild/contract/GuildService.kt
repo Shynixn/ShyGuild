@@ -12,12 +12,12 @@ interface GuildService : AutoCloseable {
     /**
      * Gets all cached guilds
      */
-    fun getGuildCache() : List<Guild>
+    fun getGuildCache(): List<Guild>
 
     /**
      * Checks the database if the guild already exists.
      */
-    suspend fun existsGuild(guildName : String) : Boolean
+    suspend fun existsGuild(guildName: String): Boolean
 
     /**
      * Unloads all guilds of a player if no other player online has those guilds loaded. This should be called when a player leaves the server.
@@ -32,5 +32,5 @@ interface GuildService : AutoCloseable {
     /**
      * Deletes an entire guild.
      */
-    suspend fun deleteGuild(owner : Player, guild: Guild)
+    suspend fun deleteGuild(guild: Guild)
 }

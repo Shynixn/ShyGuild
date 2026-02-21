@@ -11,6 +11,7 @@ import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
+import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.contract.ShyGuildLanguage
 import com.github.shynixn.shyguild.entity.GuildMember
@@ -18,6 +19,7 @@ import com.github.shynixn.shyguild.entity.Guild
 import com.github.shynixn.shyguild.entity.GuildRoleTemplate
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import com.github.shynixn.shyguild.entity.GuildTemplate
+import com.github.shynixn.shyguild.entity.PlayerInformation
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -32,6 +34,7 @@ class ShyGuildCommandExecutor(
     private val chatMessageService: ChatMessageService,
     private val guildTemplateRepository: CacheRepository<GuildTemplate>,
     private val placeHolderService: PlaceHolderService,
+    private val cachePlayerDataRepository: CachePlayerRepository<PlayerInformation>,
     coroutineHandler: CoroutineHandler,
     commandService: CommandService
 ) {
@@ -45,9 +48,7 @@ class ShyGuildCommandExecutor(
 
     private val guildTabs: (CommandSender) -> List<String> = { sender ->
         if (sender is Player) {
-            guildService.getGuildCache()
-                .filter { e -> e.isMember(sender) }
-                .map { e -> e.name }
+            guildService.getGuildCache().filter { e -> e.isMember(sender) }.map { e -> e.name }
         } else {
             guildService.getGuildCache().map { e -> e.name }
         }
@@ -72,9 +73,7 @@ class ShyGuildCommandExecutor(
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
             return placeHolderService.resolvePlaceHolder(
-                language.shyGuildPlayerNotFoundMessage.text,
-                null,
-                mapOf("0" to openArgs[0])
+                language.shyGuildPlayerNotFoundMessage.text, null, mapOf("0" to openArgs[0])
             )
         }
     }
@@ -124,9 +123,7 @@ class ShyGuildCommandExecutor(
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
             return placeHolderService.resolvePlaceHolder(
-                language.shyGuildWordNotAllowedMessage.text,
-                null,
-                mapOf("0" to openArgs[0])
+                language.shyGuildWordNotAllowedMessage.text, null, mapOf("0" to openArgs[0])
             )
         }
     }
@@ -170,9 +167,7 @@ class ShyGuildCommandExecutor(
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
             return placeHolderService.resolvePlaceHolder(
-                language.shyGuildWordNotAllowedMessage.text,
-                null,
-                mapOf("0" to openArgs[0])
+                language.shyGuildWordNotAllowedMessage.text, null, mapOf("0" to openArgs[0])
             )
         }
     }
@@ -189,10 +184,7 @@ class ShyGuildCommandExecutor(
     init {
         commandService.registerCommand(
             CommandBuilder(
-                coroutineHandler,
-                plugin,
-                settings.baseCommand,
-                chatMessageService
+                coroutineHandler, plugin, settings.baseCommand, chatMessageService
             ) {
                 usage(language.shyGuildCommandUsage.text)
                 description(language.shyGuildCommandDescription.text)
@@ -203,11 +195,20 @@ class ShyGuildCommandExecutor(
                     toolTip {
                         language.shyGuildTemplateListCommandHint.text
                     }
-                    builder().argument("template").validator(templateMustExists).tabs(templateTabs)
-                        .argument("name").validator(guildNameValidator).tabs { listOf("<name>") }
-                        .argument("displayName").validator(guildDisplayNameValidator).tabs { listOf("<displayName>") }
+                    builder().argument("template").validator(templateMustExists).tabs(templateTabs).argument("name")
+                        .validator(guildNameValidator).tabs { listOf("<name>") }.argument("displayName")
+                        .validator(guildDisplayNameValidator).tabs { listOf("<displayName>") }
                         .execute { sender, template, name, displayName ->
                             createGuild(sender, template, name, displayName)
+                        }
+                }
+                subCommand("delete") {
+                    toolTip {
+                        language.shyGuildDeleteCommandHint.text
+                    }
+                    builder().argument(settings.guildArgument).validator(guildMustExist).tabs(guildTabs)
+                        .execute { sender, guild ->
+                            deleteGuild(sender, guild)
                         }
                 }
                 subCommand("role") {
@@ -219,8 +220,7 @@ class ShyGuildCommandExecutor(
                             .argument("name").validator(roleNameValidator).tabs { listOf("<role>") }
                             .executePlayer(senderHasToBePlayer) { sender, guild, role ->
                                 addRoleToGuildMember(sender, guild, role, sender.name)
-                            }.argument("player").tabs(onlinePlayerTabs)
-                            .execute { sender, guild, role, playerNameOrId ->
+                            }.argument("player").tabs(onlinePlayerTabs).execute { sender, guild, role, playerNameOrId ->
                                 addRoleToGuildMember(sender, guild, role, playerNameOrId)
                             }
                     }
@@ -232,8 +232,7 @@ class ShyGuildCommandExecutor(
                             .argument("name").validator(roleNameValidator).tabs { listOf("<role>") }
                             .executePlayer(senderHasToBePlayer) { sender, guild, role ->
                                 removeRoleFromGuildMember(sender, guild, role, sender.name)
-                            }.argument("player").tabs(onlinePlayerTabs)
-                            .execute { sender, guild, role, playerNameOrId ->
+                            }.argument("player").tabs(onlinePlayerTabs).execute { sender, guild, role, playerNameOrId ->
                                 removeRoleFromGuildMember(sender, guild, role, playerNameOrId)
                             }
                     }
@@ -244,8 +243,7 @@ class ShyGuildCommandExecutor(
                         builder().argument(settings.guildArgument).validator(guildMustExist).tabs(guildTabs)
                             .execute { sender, guild ->
                                 listRoles(sender, guild)
-                            }.argument("player").tabs(onlinePlayerTabs)
-                            .execute { sender, guild, playerNameOrId ->
+                            }.argument("player").tabs(onlinePlayerTabs).execute { sender, guild, playerNameOrId ->
                                 listRoles(sender, guild, playerNameOrId)
                             }
                     }
@@ -307,10 +305,7 @@ class ShyGuildCommandExecutor(
     }
 
     private suspend fun addRoleToGuildMember(
-        sender: CommandSender,
-        guild: Guild,
-        role: GuildRoleTemplate,
-        playerNameOrId: String
+        sender: CommandSender, guild: Guild, role: GuildRoleTemplate, playerNameOrId: String
     ) {
         val permission = settings.guildAddRolePermission.replace("<guild>", guild.name).replace("<role>", role.name)
 
@@ -332,10 +327,7 @@ class ShyGuildCommandExecutor(
     }
 
     private suspend fun removeRoleFromGuildMember(
-        sender: CommandSender,
-        guild: Guild,
-        role: GuildRoleTemplate,
-        playerNameOrId: String
+        sender: CommandSender, guild: Guild, role: GuildRoleTemplate, playerNameOrId: String
     ) {
         val permission = settings.guildRemoveRolePermission.replace("<guild>", guild.name).replace("<role>", role.name)
 
@@ -356,6 +348,20 @@ class ShyGuildCommandExecutor(
         sender.sendLanguageMessage(language.shyGuildRemoveRoleSuccessMessage, role.name, playerNameOrId)
     }
 
+    private suspend fun deleteGuild(sender: CommandSender, guild: Guild) {
+        val permission = settings.guildDeletePermission.replace("<guild>", guild.name)
+
+        if (!sender.hasPermission(permission)) {
+            sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
+            return
+        }
+
+        val playerData = cachePlayerDataRepository.getByPlayer(sender as Player) ?: return
+        playerData.guilds.remove(guild.name)
+        guildService.deleteGuild(guild)
+        sender.sendLanguageMessage(language.shyGuildDeleteSuccessMessage, guild.name)
+    }
+
     private suspend fun createGuild(sender: CommandSender, template: GuildTemplate, name: String, displayName: String) {
         if (!sender.hasPermission(settings.templateUsePermission + template.name)) {
             sender.sendLanguageMessage(language.shyGuildNoPermissionTemplateMessage, template.name)
@@ -368,6 +374,8 @@ class ShyGuildCommandExecutor(
             sender.sendLanguageMessage(language.shyGuildAlreadyExistsMessage, guildName)
             return
         }
+
+        val playerData = cachePlayerDataRepository.getByPlayer(sender as Player) ?: return
 
         val guild = Guild().also {
             it.name = guildName
@@ -384,6 +392,8 @@ class ShyGuildCommandExecutor(
             })
         }
 
+        playerData.guilds.add(guild.name)
+        cachePlayerDataRepository.save(playerData) // Additionally save the player data to ensure the guild is deleted able.
         guildService.saveGuild(guild)
         sender.sendLanguageMessage(language.shyGuildCreateSuccessMessage, guildName)
     }

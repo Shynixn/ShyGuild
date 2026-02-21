@@ -123,6 +123,7 @@ class GuildServiceImpl(
             }
         }
 
+        cachePlayerDataRepository.save(playerInfo)
         cachePlayerDataRepository.clearByPlayer(player)
     }
 
@@ -135,11 +136,9 @@ class GuildServiceImpl(
     }
 
     override suspend fun deleteGuild(
-        owner: Player,
         guild: Guild
     ) {
-        val playerInformation = cachePlayerDataRepository.getByPlayer(owner) ?: return
-        playerInformation.guilds.remove(guild.name)
+        guilds.remove(guild.name)
         permissionPluginService.deletePermissions(guild)
         guildMetaSqlRepository.delete(guild)
     }

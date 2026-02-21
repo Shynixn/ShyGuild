@@ -57,4 +57,8 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildRoleListAllMessage: LanguageItem
 
   var shyGuildRoleListPlayerMessage: LanguageItem
+
+  var shyGuildDeleteCommandHint: LanguageItem
+
+  var shyGuildDeleteSuccessMessage: LanguageItem
 }

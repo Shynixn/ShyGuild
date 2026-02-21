@@ -37,6 +37,8 @@ class ShyGuildSettings(private val reloadFun: (ShyGuildSettings) -> Unit) {
 
     var templateUsePermission : String = Permission.DYN_TEMPLATE.text
 
+    var guildDeletePermission : String = Permission.DELETE.text
+
     var guildAddRolePermission : String = Permission.GUILD_ADD_ROLE.text
 
     var guildRemoveRolePermission : String = Permission.GUILD_REMOVE_ROLE.text

@@ -91,3 +91,9 @@ shyGuildRoleListAllMessage:
 shyGuildRoleListPlayerMessage:
   type: "CHAT"
   text: "[&9ShyGuild&f] All roles of player %shyguild_param_1%:"
+shyGuildDeleteCommandHint:
+  type: "CHAT"
+  text: "Deletes the given guild."
+shyGuildDeleteSuccessMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Successfully deleted guild %shyguild_param_1%."

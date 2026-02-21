@@ -59,4 +59,8 @@ class ShyGuildLanguageImpl : ShyGuildLanguage {
  override var shyGuildRoleListAllMessage = LanguageItem("[&9ShyGuild&f] All roles of this guild:")
 
  override var shyGuildRoleListPlayerMessage = LanguageItem("[&9ShyGuild&f] All roles of player %shyguild_param_1%:")
+
+ override var shyGuildDeleteCommandHint = LanguageItem("Deletes the given guild.")
+
+ override var shyGuildDeleteSuccessMessage = LanguageItem("[&9ShyGuild&f] Successfully deleted guild %shyguild_param_1%.")
 }

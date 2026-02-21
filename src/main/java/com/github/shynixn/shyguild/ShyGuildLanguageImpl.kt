@@ -87,4 +87,10 @@ class ShyGuildLanguageImpl : ShyGuildLanguage {
  override var shyGuildMemberMaxGuildsReachedMessage = LanguageItem("[&9ShyGuild&f]&c Player %shyguild_param_1% has already reached the maximum number of guilds they can join.")
 
  override var shyGuildMemberInviteFailedMessage = LanguageItem("[&9ShyGuild&f]&c Failed to invite player %shyguild_param_1%. Please wait a few minutes until you can send invites again.")
+
+ override var shyGuildMemberAcceptCommandHint = LanguageItem("Accepts a pending guild invite.")
+
+ override var shyGuildMemberAcceptSuccessMessage = LanguageItem("[&9ShyGuild&f] Successfully accepted the invite and joined guild %shyguild_param_1%.")
+
+ override var shyGuildMemberAcceptNoInviteMessage = LanguageItem("[&9ShyGuild&f]&c You do not have a pending invite for guild %shyguild_param_1%.")
 }

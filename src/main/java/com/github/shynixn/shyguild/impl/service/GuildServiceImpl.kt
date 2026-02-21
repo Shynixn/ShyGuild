@@ -156,7 +156,6 @@ class GuildServiceImpl(
         permissionPluginService.createOrUpdatePermissions(guild)
     }
 
-
     override suspend fun sendInvite(invite: GuildInvite): Boolean {
         if (sentInvites.containsKey(invite.senderUUID)) {
             val openInvites = sentInvites[invite.senderUUID]!!
@@ -204,5 +203,6 @@ class GuildServiceImpl(
 
     override fun close() {
         guilds.clear()
+        isDisposed = true
     }
 }

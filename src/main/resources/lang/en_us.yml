@@ -133,3 +133,12 @@ shyGuildMemberMaxGuildsReachedMessage:
 shyGuildMemberInviteFailedMessage:
   type: "CHAT"
   text: "[&9ShyGuild&f]&c Failed to invite player %shyguild_param_1%. Please wait a few minutes until you can send invites again."
+shyGuildMemberAcceptCommandHint:
+  type: "CHAT"
+  text: "Accepts a pending guild invite."
+shyGuildMemberAcceptSuccessMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Successfully accepted the invite and joined guild %shyguild_param_1%."
+shyGuildMemberAcceptNoInviteMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f]&c You do not have a pending invite for guild %shyguild_param_1%."

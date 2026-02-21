@@ -85,4 +85,10 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildMemberMaxGuildsReachedMessage: LanguageItem
 
   var shyGuildMemberInviteFailedMessage: LanguageItem
+
+  var shyGuildMemberAcceptCommandHint: LanguageItem
+
+  var shyGuildMemberAcceptSuccessMessage: LanguageItem
+
+  var shyGuildMemberAcceptNoInviteMessage: LanguageItem
 }

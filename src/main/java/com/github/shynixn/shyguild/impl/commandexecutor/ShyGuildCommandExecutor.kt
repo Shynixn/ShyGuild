@@ -295,6 +295,15 @@ class ShyGuildCommandExecutor(
                                 listMembers(sender, guild)
                             }
                     }
+                    subCommand("accept") {
+                        toolTip {
+                            language.shyGuildMemberAcceptCommandHint.text
+                        }
+                        builder().argument(settings.guildArgument).tabs(guildTabs)
+                            .executePlayer(senderHasToBePlayer) { sender, guildName ->
+                                acceptMemberInvite(sender, guildName)
+                            }
+                    }
                 }
                 subCommand("reload") {
                     permission(settings.reloadPermission)
@@ -536,6 +545,16 @@ class ShyGuildCommandExecutor(
         sender.sendLanguageMessage(language.shyGuildMemberListMessage, guild.name)
         for (member in guild.members) {
             sender.sendMessage("- ${member.playerName} (${member.roles.joinToString(", ")})")
+        }
+    }
+
+    private suspend fun acceptMemberInvite(sender: Player, guildName: String) {
+        val accepted = guildService.acceptInvite(sender, guildName)
+
+        if (accepted) {
+            sender.sendLanguageMessage(language.shyGuildMemberAcceptSuccessMessage, guildName)
+        } else {
+            sender.sendLanguageMessage(language.shyGuildMemberAcceptNoInviteMessage, guildName)
         }
     }
 

@@ -368,6 +368,7 @@ class ShyGuildCommandExecutor(
         }
 
         member.roles.add(role.name)
+        guildService.applyGuildMemberPermissions(UUID.fromString(member.playerUUID), guild)
         guildService.saveGuild(guild)
         sender.sendLanguageMessage(language.shyGuildAssignRoleSuccessMessage, role.name, playerNameOrId)
     }
@@ -390,22 +391,9 @@ class ShyGuildCommandExecutor(
         }
 
         member.roles.remove(role.name)
+        guildService.applyGuildMemberPermissions(UUID.fromString(member.playerUUID), guild)
         guildService.saveGuild(guild)
         sender.sendLanguageMessage(language.shyGuildRemoveRoleSuccessMessage, role.name, playerNameOrId)
-    }
-
-    private suspend fun deleteGuild(sender: CommandSender, guild: Guild) {
-        val permission = settings.guildDeletePermission.replace("<guild>", guild.name)
-
-        if (!sender.hasPermission(permission)) {
-            sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
-            return
-        }
-
-        val playerData = cachePlayerDataRepository.getByPlayer(sender as Player) ?: return
-        playerData.guilds.remove(guild.name)
-        guildService.deleteGuild(guild)
-        sender.sendLanguageMessage(language.shyGuildDeleteSuccessMessage, guild.name)
     }
 
     private suspend fun addMemberToGuild(sender: CommandSender, guild: Guild, playerNameOrId: String) {
@@ -451,12 +439,18 @@ class ShyGuildCommandExecutor(
             return
         }
 
+        if (guild.members.size >= guild.template!!.maxPlayers) {
+            sender.sendLanguageMessage(language.shyGuildMemberGuildFullMessage, guild.name)
+            return
+        }
+
         guild.members.add(GuildMember().also {
             it.playerName = targetPlayerData.playerName
             it.playerUUID = targetPlayerData.playerUUID
         })
-        targetPlayerData.guilds.add(guild.name)
         guildService.saveGuild(guild)
+        targetPlayerData.guilds.add(guild.name)
+        cachePlayerDataRepository.save(targetPlayerData)
         sender.sendLanguageMessage(language.shyGuildMemberAddSuccessMessage, targetPlayerData.playerName, guild.name)
     }
 
@@ -501,9 +495,6 @@ class ShyGuildCommandExecutor(
             sender.sendLanguageMessage(language.shyGuildPlayerNotAMemberMessage, playerNameOrId)
             return
         }
-
-        guild.members.remove(member)
-
         val uuid = try {
             UUID.fromString(playerNameOrId)
         } catch (_: Exception) {
@@ -529,8 +520,10 @@ class ShyGuildCommandExecutor(
             return
         }
 
-        targetPlayerData.guilds.remove(guild.name)
+        guild.members.remove(member)
         guildService.saveGuild(guild)
+        targetPlayerData.guilds.remove(guild.name)
+        cachePlayerDataRepository.save(targetPlayerData)
         sender.sendLanguageMessage(language.shyGuildMemberRemoveSuccessMessage, playerNameOrId, guild.name)
     }
 
@@ -550,8 +543,27 @@ class ShyGuildCommandExecutor(
 
     private suspend fun acceptMemberInvite(sender: Player, guildName: String) {
         val accepted = guildService.acceptInvite(sender, guildName)
+        val guild = guildService.getGuildCache().firstOrNull { e -> e.name.equals(guildName, true) }
+        val playerData = cachePlayerDataRepository.getByPlayer(sender) ?: return
 
-        if (accepted) {
+        if (playerData.guilds.size >= settings.maxJoinGuildsPerPlayer) {
+            sender.sendLanguageMessage(language.shyGuildMemberMaxGuildsReachedMessage, sender.name)
+            return
+        }
+
+        if (guild != null && guild.members.size >= guild.template!!.maxPlayers) {
+            sender.sendLanguageMessage(language.shyGuildMemberGuildFullMessage, guildName)
+            return
+        }
+
+        if (accepted && guild != null && guild.getMember(sender) == null) {
+            guild.members.add(GuildMember().also {
+                it.playerName = sender.name
+                it.playerUUID = sender.uniqueId.toString()
+            })
+            guildService.saveGuild(guild)
+            playerData.guilds.add(guild.name)
+            cachePlayerDataRepository.save(playerData)
             sender.sendLanguageMessage(language.shyGuildMemberAcceptSuccessMessage, guildName)
         } else {
             sender.sendLanguageMessage(language.shyGuildMemberAcceptNoInviteMessage, guildName)
@@ -585,12 +597,39 @@ class ShyGuildCommandExecutor(
                 it.roles.add("owner")
             })
             val playerData = cachePlayerDataRepository.getByPlayer(sender) ?: return
+            if (playerData.guilds.size >= settings.maxJoinGuildsPerPlayer) {
+                sender.sendLanguageMessage(language.shyGuildMemberMaxGuildsReachedMessage, sender.name)
+                return
+            }
+
+            if (playerData.createdGuilds.size >= settings.maxCreateGuildsPerPlayer) {
+                sender.sendLanguageMessage(language.shyGuildCreateMaxGuildsReachedMessage, sender.name)
+                return
+            }
+
             playerData.guilds.add(guild.name)
-            cachePlayerDataRepository.save(playerData) // Additionally save the player data to ensure the guild is deleted able.
+            playerData.createdGuilds.add(guild.name)
+            cachePlayerDataRepository.save(playerData)
         }
 
         guildService.saveGuild(guild)
         sender.sendLanguageMessage(language.shyGuildCreateSuccessMessage, guildName)
+    }
+
+    private suspend fun deleteGuild(sender: CommandSender, guild: Guild) {
+        val permission = settings.guildDeletePermission.replace("<guild>", guild.name)
+
+        if (!sender.hasPermission(permission)) {
+            sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
+            return
+        }
+
+        val playerData = cachePlayerDataRepository.getByPlayer(sender as Player) ?: return
+        playerData.guilds.remove(guild.name)
+        playerData.createdGuilds.remove(guild.name)
+        cachePlayerDataRepository.save(playerData)
+        guildService.deleteGuild(guild)
+        sender.sendLanguageMessage(language.shyGuildDeleteSuccessMessage, guild.name)
     }
 
     private suspend fun listTemplates(sender: CommandSender) {

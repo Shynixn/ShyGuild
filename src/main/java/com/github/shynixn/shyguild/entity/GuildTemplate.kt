@@ -12,4 +12,9 @@ class GuildTemplate : Element {
      * List of roles.
      */
     var roles: List<GuildRoleTemplate> = ArrayList()
+
+    /**
+     * Maximum amount of players that can be in the guild.
+     */
+    var maxPlayers : Int = 10
 }

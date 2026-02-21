@@ -91,4 +91,8 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildMemberAcceptSuccessMessage: LanguageItem
 
   var shyGuildMemberAcceptNoInviteMessage: LanguageItem
+
+  var shyGuildMemberGuildFullMessage: LanguageItem
+
+  var shyGuildCreateMaxGuildsReachedMessage: LanguageItem
 }

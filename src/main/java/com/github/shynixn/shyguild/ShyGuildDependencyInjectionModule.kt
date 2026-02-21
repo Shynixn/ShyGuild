@@ -105,6 +105,7 @@ class ShyGuildDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService()
             )
         }
         module.addService<ShyGuildListener> {

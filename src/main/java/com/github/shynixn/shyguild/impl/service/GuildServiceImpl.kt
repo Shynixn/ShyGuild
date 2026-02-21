@@ -150,6 +150,13 @@ class GuildServiceImpl(
         guildMetaSqlRepository.delete(guild)
     }
 
+    override suspend fun applyGuildMemberPermissions(
+        playerUUID: UUID,
+        guild: Guild
+    ) {
+        permissionPluginService.applyRoles(playerUUID, guild)
+    }
+
     private suspend fun refreshGuild(guild: Guild) {
         guild.template = templateService.getAll().firstOrNull { e -> e.name == guild.templateName }
         guilds[guild.name] = guild

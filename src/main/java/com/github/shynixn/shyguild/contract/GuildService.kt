@@ -2,7 +2,9 @@ package com.github.shynixn.shyguild.contract
 
 import com.github.shynixn.shyguild.entity.Guild
 import com.github.shynixn.shyguild.entity.GuildInvite
+import com.github.shynixn.shyguild.entity.GuildMember
 import org.bukkit.entity.Player
+import java.util.UUID
 
 interface GuildService : AutoCloseable {
     /**
@@ -36,13 +38,18 @@ interface GuildService : AutoCloseable {
     suspend fun deleteGuild(guild: Guild)
 
     /**
+     * Applies the guild member permissions to the player. This should be called when the roles of a guildMember change.
+     */
+    suspend fun applyGuildMemberPermissions(playerUUID: UUID, guild: Guild)
+
+    /**
      * Sends a guild invite.
      */
-    suspend fun sendInvite(invite: GuildInvite) : Boolean
+    suspend fun sendInvite(invite: GuildInvite): Boolean
 
     /**
      * Accepts a guild invite if it exists.
      * Returns true if an invite was accepted, false if no invite was found.
      */
-    suspend fun acceptInvite(player: Player, name : String) : Boolean
+    suspend fun acceptInvite(player: Player, name: String): Boolean
 }

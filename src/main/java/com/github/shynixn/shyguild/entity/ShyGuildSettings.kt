@@ -35,17 +35,27 @@ class ShyGuildSettings(private val reloadFun: (ShyGuildSettings) -> Unit) {
 
     var templateListPermission: String = Permission.TEMPLATE_LIST.text
 
-    var templateUsePermission : String = Permission.DYN_TEMPLATE.text
+    var templateUsePermission: String = Permission.DYN_TEMPLATE.text
 
-    var guildDeletePermission : String = Permission.DELETE.text
+    var guildDeletePermission: String = Permission.DELETE.text
 
-    var guildAddRolePermission : String = Permission.GUILD_ADD_ROLE.text
+    var guildAddRolePermission: String = Permission.GUILD_ADD_ROLE.text
 
-    var guildRemoveRolePermission : String = Permission.GUILD_REMOVE_ROLE.text
+    var guildRemoveRolePermission: String = Permission.GUILD_REMOVE_ROLE.text
 
-    var guildListRolePermission : String = Permission.GUILD_LIST_ROLE.text
+    var guildListRolePermission: String = Permission.GUILD_LIST_ROLE.text
+
+    var guildMemberAddPermission: String = Permission.GUILD_MEMBER_ADD.text
+
+    var guildMemberInvitePermission: String = Permission.GUILD_MEMBER_INVITE.text
+
+    var guildMemberRemovePermission: String = Permission.GUILD_MEMBER_REMOVE.text
+
+    var guildMemberListPermission: String = Permission.GUILD_MEMBER_LIST.text
 
     var blackList: List<String> = ArrayList()
+
+    var guildMaxInvites: Int = 5
 
     var guildNameMinLength: Int = 3
     var guildNameMaxLength: Int = 16

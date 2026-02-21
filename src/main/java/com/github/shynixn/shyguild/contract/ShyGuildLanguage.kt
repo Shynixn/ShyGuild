@@ -61,4 +61,28 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildDeleteCommandHint: LanguageItem
 
   var shyGuildDeleteSuccessMessage: LanguageItem
+
+  var shyGuildMemberAddCommandHint: LanguageItem
+
+  var shyGuildMemberAddSuccessMessage: LanguageItem
+
+  var shyGuildMemberInviteCommandHint: LanguageItem
+
+  var shyGuildMemberInviteSuccessMessage: LanguageItem
+
+  var shyGuildMemberInviteReceivedMessage: LanguageItem
+
+  var shyGuildMemberRemoveCommandHint: LanguageItem
+
+  var shyGuildMemberRemoveSuccessMessage: LanguageItem
+
+  var shyGuildMemberListCommandHint: LanguageItem
+
+  var shyGuildMemberListMessage: LanguageItem
+
+  var shyGuildMemberAlreadyInGuildMessage: LanguageItem
+
+  var shyGuildMemberMaxGuildsReachedMessage: LanguageItem
+
+  var shyGuildMemberInviteFailedMessage: LanguageItem
 }

@@ -1,6 +1,7 @@
 package com.github.shynixn.shyguild.contract
 
 import com.github.shynixn.shyguild.entity.Guild
+import com.github.shynixn.shyguild.entity.GuildInvite
 import org.bukkit.entity.Player
 
 interface GuildService : AutoCloseable {
@@ -33,4 +34,15 @@ interface GuildService : AutoCloseable {
      * Deletes an entire guild.
      */
     suspend fun deleteGuild(guild: Guild)
+
+    /**
+     * Sends a guild invite.
+     */
+    suspend fun sendInvite(invite: GuildInvite) : Boolean
+
+    /**
+     * Accepts a guild invite if it exists.
+     * Returns true if an invite was accepted, false if no invite was found.
+     */
+    suspend fun acceptInvite(player: Player, name : String) : Boolean
 }

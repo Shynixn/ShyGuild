@@ -97,3 +97,39 @@ shyGuildDeleteCommandHint:
 shyGuildDeleteSuccessMessage:
   type: "CHAT"
   text: "[&9ShyGuild&f] Successfully deleted guild %shyguild_param_1%."
+shyGuildMemberAddCommandHint:
+  type: "CHAT"
+  text: "Adds a player directly to the given guild. Should only be used for administrative purposes."
+shyGuildMemberAddSuccessMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Successfully added player %shyguild_param_1% to guild %shyguild_param_2%."
+shyGuildMemberInviteCommandHint:
+  type: "CHAT"
+  text: "Invites a player to the given guild."
+shyGuildMemberInviteSuccessMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Successfully invited player %shyguild_param_1% to guild %shyguild_param_2%."
+shyGuildMemberInviteReceivedMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] You have been invited to join guild %shyguild_param_1% by %shyguild_param_2%. Use /shyguild member accept %shyguild_param_1% to join."
+shyGuildMemberRemoveCommandHint:
+  type: "CHAT"
+  text: "Removes a player from the given guild."
+shyGuildMemberRemoveSuccessMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Successfully removed player %shyguild_param_1% from guild %shyguild_param_2%."
+shyGuildMemberListCommandHint:
+  type: "CHAT"
+  text: "Lists all members of the given guild."
+shyGuildMemberListMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f] Members of guild %shyguild_param_1%:"
+shyGuildMemberAlreadyInGuildMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f]&c Player %shyguild_param_1% is already a member of guild %shyguild_param_2%."
+shyGuildMemberMaxGuildsReachedMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f]&c Player %shyguild_param_1% has already reached the maximum number of guilds they can join."
+shyGuildMemberInviteFailedMessage:
+  type: "CHAT"
+  text: "[&9ShyGuild&f]&c Failed to invite player %shyguild_param_1%. Please wait a few minutes until you can send invites again."

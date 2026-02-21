@@ -7,12 +7,15 @@ import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
 import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.contract.PermissionPluginService
 import com.github.shynixn.shyguild.entity.Guild
+import com.github.shynixn.shyguild.entity.GuildInvite
 import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.entity.PlayerInformation
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import java.util.Date
+import java.util.UUID
 
 class GuildServiceImpl(
     private val settings: ShyGuildSettings,
@@ -24,6 +27,8 @@ class GuildServiceImpl(
 ) : GuildService {
     private var isDisposed = false
     private var guilds = HashMap<String, Guild>()
+    private var sentInvites = HashMap<UUID, MutableList<GuildInvite>>()
+    private var receivedInvites = HashMap<UUID, MutableList<GuildInvite>>()
 
     init {
         coroutineHandler.execute {
@@ -123,6 +128,8 @@ class GuildServiceImpl(
             }
         }
 
+        sentInvites.remove(player.uniqueId)
+        receivedInvites.remove(player.uniqueId)
         cachePlayerDataRepository.save(playerInfo)
         cachePlayerDataRepository.clearByPlayer(player)
     }
@@ -147,6 +154,52 @@ class GuildServiceImpl(
         guild.template = templateService.getAll().firstOrNull { e -> e.name == guild.templateName }
         guilds[guild.name] = guild
         permissionPluginService.createOrUpdatePermissions(guild)
+    }
+
+
+    override suspend fun sendInvite(invite: GuildInvite): Boolean {
+        if (sentInvites.containsKey(invite.senderUUID)) {
+            val openInvites = sentInvites[invite.senderUUID]!!
+
+            val currentDate = Date()
+            for (invite in ArrayList(openInvites)) {
+                if (currentDate.time - invite.creationDate.time > 1000L * 300) { // Invite is older than 5 minutes, remove it.
+                    openInvites.remove(invite)
+                }
+            }
+
+            if (openInvites.size >= settings.guildMaxInvites) {
+                return false
+            }
+
+            openInvites.add(invite)
+            sentInvites[invite.senderUUID] = openInvites
+        } else {
+            sentInvites[invite.senderUUID] = mutableListOf(invite)
+        }
+
+        if (receivedInvites.containsKey(invite.receiverUUID)) {
+            receivedInvites[invite.receiverUUID] = (receivedInvites[invite.receiverUUID]!! + invite).toMutableList()
+        } else {
+            receivedInvites[invite.receiverUUID] = mutableListOf(invite)
+        }
+
+        return true
+    }
+
+    override suspend fun acceptInvite(player: Player, name: String): Boolean {
+        val invitedUUID = player.uniqueId
+        val invites = receivedInvites[invitedUUID] ?: return false
+        val guildInvite = invites.firstOrNull { e -> e.guildName == name }
+
+        if (guildInvite == null) {
+            return false
+        }
+
+        receivedInvites[invitedUUID] = invites.filter { e -> e.guildName != name }.toMutableList()
+        sentInvites[guildInvite.senderUUID] =
+            sentInvites[guildInvite.senderUUID]!!.filter { e -> e.receiverUUID == invitedUUID }.toMutableList()
+        return true
     }
 
     override fun close() {

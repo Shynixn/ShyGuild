@@ -70,3 +70,5 @@ global:
   guildDisplayNameMinLength: 3
   # Maximum length for guild display names. This contains colored characters and spaces.
   guildDisplayNameMaxLength: 32
+  # Maximum amount of invites a player can send out at the same time.
+  guildMaxInvites: 5

@@ -63,4 +63,28 @@ class ShyGuildLanguageImpl : ShyGuildLanguage {
  override var shyGuildDeleteCommandHint = LanguageItem("Deletes the given guild.")
 
  override var shyGuildDeleteSuccessMessage = LanguageItem("[&9ShyGuild&f] Successfully deleted guild %shyguild_param_1%.")
+
+ override var shyGuildMemberAddCommandHint = LanguageItem("Adds a player directly to the given guild. Should only be used for administrative purposes.")
+
+ override var shyGuildMemberAddSuccessMessage = LanguageItem("[&9ShyGuild&f] Successfully added player %shyguild_param_1% to guild %shyguild_param_2%.")
+
+ override var shyGuildMemberInviteCommandHint = LanguageItem("Invites a player to the given guild.")
+
+ override var shyGuildMemberInviteSuccessMessage = LanguageItem("[&9ShyGuild&f] Successfully invited player %shyguild_param_1% to guild %shyguild_param_2%.")
+
+ override var shyGuildMemberInviteReceivedMessage = LanguageItem("[&9ShyGuild&f] You have been invited to join guild %shyguild_param_1% by %shyguild_param_2%. Use /shyguild member accept %shyguild_param_1% to join.")
+
+ override var shyGuildMemberRemoveCommandHint = LanguageItem("Removes a player from the given guild.")
+
+ override var shyGuildMemberRemoveSuccessMessage = LanguageItem("[&9ShyGuild&f] Successfully removed player %shyguild_param_1% from guild %shyguild_param_2%.")
+
+ override var shyGuildMemberListCommandHint = LanguageItem("Lists all members of the given guild.")
+
+ override var shyGuildMemberListMessage = LanguageItem("[&9ShyGuild&f] Members of guild %shyguild_param_1%:")
+
+ override var shyGuildMemberAlreadyInGuildMessage = LanguageItem("[&9ShyGuild&f]&c Player %shyguild_param_1% is already a member of guild %shyguild_param_2%.")
+
+ override var shyGuildMemberMaxGuildsReachedMessage = LanguageItem("[&9ShyGuild&f]&c Player %shyguild_param_1% has already reached the maximum number of guilds they can join.")
+
+ override var shyGuildMemberInviteFailedMessage = LanguageItem("[&9ShyGuild&f]&c Failed to invite player %shyguild_param_1%. Please wait a few minutes until you can send invites again.")
 }

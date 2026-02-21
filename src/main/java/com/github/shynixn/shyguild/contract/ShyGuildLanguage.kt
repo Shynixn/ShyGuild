@@ -19,4 +19,42 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildCommandUsage: LanguageItem
 
   var shyGuildCommandDescription: LanguageItem
+
+  var shyGuildTemplateListCommandHint: LanguageItem
+
+  var shyGuildTemplateListMessage: LanguageItem
+
+  var shyGuildWordNotAllowedMessage: LanguageItem
+
+  var shyGuildCreateCommandHint: LanguageItem
+
+  var shyGuildCreateSuccessMessage: LanguageItem
+
+  var shyGuildAlreadyExistsMessage: LanguageItem
+
+  var shyGuildTemplateNotFoundMessage: LanguageItem
+
+  var shyGuildNoPermissionTemplateMessage: LanguageItem
+
+  var shyGuildGuildNotFoundMessage: LanguageItem
+
+  var shyGuildRoleNotFoundMessage: LanguageItem
+
+  var shyGuildNoPermissionRoleMessage: LanguageItem
+
+  var shyGuildAddRoleCommandHint: LanguageItem
+
+  var shyGuildRemoveRoleCommandHint: LanguageItem
+
+  var shyGuildListRolesCommandHint: LanguageItem
+
+  var shyGuildPlayerNotAMemberMessage: LanguageItem
+
+  var shyGuildAssignRoleSuccessMessage: LanguageItem
+
+  var shyGuildRemoveRoleSuccessMessage: LanguageItem
+
+  var shyGuildRoleListAllMessage: LanguageItem
+
+  var shyGuildRoleListPlayerMessage: LanguageItem
 }

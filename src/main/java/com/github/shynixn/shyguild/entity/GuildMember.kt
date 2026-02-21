@@ -1,6 +1,6 @@
 package com.github.shynixn.shyguild.entity
 
-class GuildMemberMeta {
+class GuildMember {
     /**
      * UUID of the player.
      */

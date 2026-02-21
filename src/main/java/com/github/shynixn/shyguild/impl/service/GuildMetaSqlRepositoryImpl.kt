@@ -8,7 +8,7 @@ import com.github.shynixn.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import com.github.shynixn.mcutils.database.api.SqlConnectionService
 import com.github.shynixn.mcutils.database.entity.ConnectionType
 import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
-import com.github.shynixn.shyguild.entity.GuildMeta
+import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.Connection
@@ -16,7 +16,7 @@ import java.sql.Connection
 class GuildMetaSqlRepositoryImpl(
     private val tableName: String,
     private val sqlConnectionService: SqlConnectionService,
-    private val typeReference: TypeReference<GuildMeta>
+    private val typeReference: TypeReference<Guild>
 ) : GuildMetaSqlRepository {
     private val objectMapper: ObjectMapper =
         ObjectMapper(YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER))
@@ -30,20 +30,18 @@ class GuildMetaSqlRepositoryImpl(
             // id as integer auto-increment primary key, name indexed (normal varchar), data as MEDIUMTEXT for larger payloads
             """
             CREATE TABLE IF NOT EXISTS $tableName (
-              id INT AUTO_INCREMENT PRIMARY KEY,
-              name VARCHAR(255) NOT NULL,
+              name VARCHAR(255) NOT NULL PRIMARY KEY,
               data MEDIUMTEXT NOT NULL
             )
-            """.trimIndent() + "; CREATE INDEX IF NOT EXISTS ${tableName}_name_index ON $tableName(name)"
+            """.trimIndent()
         } else {
             // SQLite and others: use INTEGER PRIMARY KEY AUTOINCREMENT for id and TEXT for data
             """
             CREATE TABLE IF NOT EXISTS $tableName (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              name TEXT NOT NULL,
+              name TEXT NOT NULL PRIMARY KEY,
               data TEXT NOT NULL
             )
-            """.trimIndent() + "; CREATE INDEX IF NOT EXISTS ${tableName}_name_index ON $tableName(name)"
+            """.trimIndent()
         }
     }
     private val deleteStatement by lazy {
@@ -78,7 +76,7 @@ class GuildMetaSqlRepositoryImpl(
     /**
      * Saves the given data.
      */
-    override suspend fun save(data: GuildMeta) {
+    override suspend fun save(data: Guild) {
         withContext(Dispatchers.IO) {
             sqlConnectionService.getConnection().use { connection ->
                 saveData(connection, data)
@@ -90,7 +88,7 @@ class GuildMetaSqlRepositoryImpl(
     /**
      * Deletes the given data from the storage.
      */
-    override suspend fun delete(data: GuildMeta) {
+    override suspend fun delete(data: Guild) {
         withContext(Dispatchers.IO) {
             sqlConnectionService.getConnection().use { connection ->
                 connection.prepareStatement(deleteStatement).use { statement ->
@@ -106,8 +104,8 @@ class GuildMetaSqlRepositoryImpl(
      * Gets the data from the storage by name.
      * Returns null if it does not exist.
      */
-    override suspend fun getByName(name: String): GuildMeta? {
-        var result: GuildMeta? = null
+    override suspend fun getByName(name: String): Guild? {
+        var result: Guild? = null
 
         withContext(Dispatchers.IO) {
             sqlConnectionService.getConnection().use { connection ->
@@ -116,7 +114,7 @@ class GuildMetaSqlRepositoryImpl(
                     statement.executeQuery().use { resultSet ->
                         while (resultSet.next()) {
                             val data = resultSet.getString("data")
-                            result = objectMapper.readValue<GuildMeta>(
+                            result = objectMapper.readValue<Guild>(
                                 data, typeReference
                             )
                         }
@@ -131,7 +129,7 @@ class GuildMetaSqlRepositoryImpl(
     /**
      * Gets all guilds from the storage.
      */
-    override suspend fun getAll(): Sequence<GuildMeta> {
+    override suspend fun getAll(): Sequence<Guild> {
         return withContext(Dispatchers.IO) {
             sequence {
                 sqlConnectionService.getConnection().use { connection ->
@@ -139,7 +137,7 @@ class GuildMetaSqlRepositoryImpl(
                         statement.executeQuery().use { resultSet ->
                             while (resultSet.next()) {
                                 val data = resultSet.getString("data")
-                                val retrievedValue = objectMapper.readValue<GuildMeta>(
+                                val retrievedValue = objectMapper.readValue<Guild>(
                                     data, typeReference
                                 )
                                 yield(retrievedValue)
@@ -151,7 +149,7 @@ class GuildMetaSqlRepositoryImpl(
         }
     }
 
-    private fun saveData(connection: Connection, data: GuildMeta) {
+    private fun saveData(connection: Connection, data: Guild) {
         val serializedData = objectMapper.writeValueAsString(data)
         if (data.isPersisted) {
             connection.prepareStatement(updateStatement).use { statement ->

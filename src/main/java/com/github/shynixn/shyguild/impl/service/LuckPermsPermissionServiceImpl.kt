@@ -1,7 +1,7 @@
 package com.github.shynixn.shyguild.impl.service
 
 import com.github.shynixn.shyguild.contract.PermissionPluginService
-import com.github.shynixn.shyguild.entity.GuildMeta
+import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.luckperms.api.LuckPermsProvider
@@ -12,7 +12,7 @@ import java.util.Locale
 class LuckPermsPermissionServiceImpl(private val plugin: Plugin) : PermissionPluginService {
     private val luckPermsApiGroupManager = LuckPermsProvider.get().groupManager
 
-    override suspend fun createOrUpdatePermissions(guild: GuildMeta) {
+    override suspend fun createOrUpdatePermissions(guild: Guild) {
         val template = guild.template ?: return
 
         withContext(Dispatchers.IO) {
@@ -48,7 +48,7 @@ class LuckPermsPermissionServiceImpl(private val plugin: Plugin) : PermissionPlu
         }
     }
 
-    override suspend fun deletePermissions(guild: GuildMeta) {
+    override suspend fun deletePermissions(guild: Guild) {
         val template = guild.template ?: return
 
         withContext(Dispatchers.IO) {

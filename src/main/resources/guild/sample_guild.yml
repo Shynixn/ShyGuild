@@ -2,11 +2,9 @@
 name: "sample_guild"
 # Maximum amount of players that can be in a guild created from this template.
 maxPlayers: 10
-# Allow players to be in multiple guilds at the same time. If false, players can only be in one guild of this guild tempalte at a time.
-joinMultiple: false
 # A list of roles that players in a guild created from this template can have. Each role has got a name and a list of permissions that are assigned to players with this role. If LuckPerms integration is enabled, the permissions support LuckPerms syntax and will be assigned to the corresponding LuckPerms group.
 roles:
-  - name: "Owner"
+  - name: "owner"
     # Permissions that are assigned to players with this role. Permissions require the plugin LuckPerms to be installed.
     allowPermissions:
       - "blockball.club.join.*" # TODO: Allow direct attaching only allow when teams are empty. Only when the owner gives permission to this guild to join another arena.
@@ -17,7 +15,7 @@ roles:
       - "shyguild.guild.%shyguild_guild_name%.demote"
     # Permissions that are denied to players with this role. Permissions require the plugin LuckPerms to be installed.
     denyPermissions: []
-  - name: "Member"
+  - name: "member"
     # Permissions that are assigned to players with this role. Permissions require the plugin LuckPerms to be installed.
     allowPermissions:
       - "shyguild.guild.%shyguild_guild_name%.leave"

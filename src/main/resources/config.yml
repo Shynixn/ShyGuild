@@ -56,3 +56,17 @@ global:
   maxJoinGuildsPerPlayer: 3
   # Maximum amount of guilds a player can create.
   maxCreateGuildsPerPlayer: 1
+  # BlackList of words that are not allowed in guild names and other messages.
+  blackList:
+    - "nigger"
+    - "nigga"
+    - "fuck"
+    - "shit"
+  # Minimum length for guild names.
+  guildNameMinLength: 3
+  # Maximum length for guild names.
+  guildNameMaxLength: 16
+  # Minimum length for guild display names. This contains colored characters and spaces.
+  guildDisplayNameMinLength: 3
+  # Maximum length for guild display names. This contains colored characters and spaces.
+  guildDisplayNameMaxLength: 32

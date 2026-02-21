@@ -26,7 +26,7 @@ import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
 import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.contract.PermissionPluginService
 import com.github.shynixn.shyguild.contract.ShyGuildLanguage
-import com.github.shynixn.shyguild.entity.GuildMeta
+import com.github.shynixn.shyguild.entity.Guild
 import com.github.shynixn.shyguild.entity.PlayerInformation
 import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
@@ -90,7 +90,7 @@ class ShyGuildDependencyInjectionModule(
         }
         module.addService<GuildMetaSqlRepository> {
             GuildMetaSqlRepositoryImpl(
-                "${plugin.name}Guild", sqlConnectionService, object : TypeReference<GuildMeta>() {})
+                "${plugin.name}Guild", sqlConnectionService, object : TypeReference<Guild>() {})
         }
 
         // Services
@@ -105,7 +105,6 @@ class ShyGuildDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
             )
         }
         module.addService<ShyGuildListener> {

@@ -6,7 +6,7 @@ import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
 import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.contract.PermissionPluginService
-import com.github.shynixn.shyguild.entity.GuildMeta
+import com.github.shynixn.shyguild.entity.Guild
 import com.github.shynixn.shyguild.entity.GuildTemplate
 import com.github.shynixn.shyguild.entity.PlayerInformation
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
@@ -23,13 +23,13 @@ class GuildServiceImpl(
     private val templateService: CacheRepository<GuildTemplate>
 ) : GuildService {
     private var isDisposed = false
-    private var guilds = HashMap<String, GuildMeta>()
+    private var guilds = HashMap<String, Guild>()
 
     init {
         coroutineHandler.execute {
             while (!isDisposed) {
                 val guildNames = guilds.keys.toList()
-                val newGuilds = HashMap<String, GuildMeta>()
+                val newGuilds = HashMap<String, Guild>()
                 for (guildName in guildNames) {
                     val newGuildData = guildMetaSqlRepository.getByName(guildName)
 
@@ -51,7 +51,7 @@ class GuildServiceImpl(
         }
     }
 
-    override suspend fun getGuilds(player: Player): List<GuildMeta> {
+    override suspend fun getGuilds(player: Player): List<Guild> {
         var playerInfo = cachePlayerDataRepository.getByPlayer(player)
 
         if (playerInfo == null) {
@@ -62,7 +62,7 @@ class GuildServiceImpl(
             cachePlayerDataRepository.save(playerInfo)
         }
 
-        val result = ArrayList<GuildMeta>()
+        val result = ArrayList<Guild>()
         val guildNames = ArrayList(playerInfo.guilds)
 
         for (guildName in guildNames) {
@@ -82,6 +82,18 @@ class GuildServiceImpl(
         }
 
         return result
+    }
+
+    override fun getGuildCache(): List<Guild> {
+        return guilds.values.toList()
+    }
+
+    override suspend fun existsGuild(guildName: String): Boolean {
+        if (guilds.containsKey(guildName)) {
+            return true
+        }
+
+        return guildMetaSqlRepository.getByName(guildName) != null
     }
 
     override suspend fun cleanCache(player: Player) {
@@ -114,7 +126,7 @@ class GuildServiceImpl(
         cachePlayerDataRepository.clearByPlayer(player)
     }
 
-    override suspend fun saveGuild(guild: GuildMeta) {
+    override suspend fun saveGuild(guild: Guild) {
         if (!guilds.containsKey(guild.name)) {
             refreshGuild(guild)
         }
@@ -124,7 +136,7 @@ class GuildServiceImpl(
 
     override suspend fun deleteGuild(
         owner: Player,
-        guild: GuildMeta
+        guild: Guild
     ) {
         val playerInformation = cachePlayerDataRepository.getByPlayer(owner) ?: return
         playerInformation.guilds.remove(guild.name)
@@ -132,7 +144,7 @@ class GuildServiceImpl(
         guildMetaSqlRepository.delete(guild)
     }
 
-    override suspend fun refreshGuild(guild: GuildMeta) {
+    private suspend fun refreshGuild(guild: Guild) {
         guild.template = templateService.getAll().firstOrNull { e -> e.name == guild.templateName }
         guilds[guild.name] = guild
         permissionPluginService.createOrUpdatePermissions(guild)
@@ -140,6 +152,5 @@ class GuildServiceImpl(
 
     override fun close() {
         guilds.clear()
-        guildMetaSqlRepository.close()
     }
 }

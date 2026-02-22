@@ -37,7 +37,7 @@ These permissions control who can **execute** each command.
 
 ## 🏰 Guild-Specific Permission Reference
 
-These permissions control **per-guild** actions. They are typically assigned automatically through guild role templates and LuckPerms. The `<guild>` placeholder is replaced with the guild's name.
+These permissions control **per-guild** actions. They are typically assigned at guild template level. Do not assign these manually.
 
 | Permission | Level | Description | Required For |
 |------------|-------|-------------|--------------|

@@ -24,12 +24,12 @@ These permissions control who can **execute** each command.
 | `shyguild.cmd.role.add` | 👤 User | Assign roles to guild members | `/shyguild role add` |
 | `shyguild.cmd.role.remove` | 👤 User | Remove roles from guild members | `/shyguild role remove` |
 | `shyguild.cmd.role.list` | 👤 User | List roles of a guild or player | `/shyguild role list` |
-| `shyguild.cmd.member.add` | 🛡️ Admin | Add players directly to a guild | `/shyguild member add` |
 | `shyguild.cmd.member.remove` | 👤 User | Remove players from a guild | `/shyguild member remove` |
 | `shyguild.cmd.member.list` | 👤 User | List members of a guild | `/shyguild member list` |
 | `shyguild.cmd.member.invite` | 👤 User | Invite players to a guild | `/shyguild member invite` |
 | `shyguild.cmd.member.accept` | 👤 User | Accept a pending guild invite | `/shyguild member accept` |
 | `shyguild.cmd.member.leave` | 👤 User | Leave a guild | `/shyguild member leave` |
+| `shyguild.cmd.member.add` | 🛡️ Admin | Add players directly to a guild | `/shyguild member add` |
 | `shyguild.cmd.template.list` | 🛡️ Admin | List all loaded guild templates | `/shyguild template list` |
 | `shyguild.cmd.reload` | 🛡️ Admin | Reload all configurations | `/shyguild reload` |
 

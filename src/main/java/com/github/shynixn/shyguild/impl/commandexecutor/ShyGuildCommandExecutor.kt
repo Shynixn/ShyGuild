@@ -347,13 +347,6 @@ class ShyGuildCommandExecutor(
     }
 
     private suspend fun leaveGuild(sender: Player, guild: Guild) {
-        val permission = settings.guildMemberLeavePermission.replace("<guild>", guild.name)
-
-        if (!sender.hasPermission(permission)) {
-            sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
-            return
-        }
-
         val targetPlayerData = cachePlayerDataRepository.getByPlayer(sender)
 
         if (targetPlayerData == null) {
@@ -366,6 +359,15 @@ class ShyGuildCommandExecutor(
         if (member == null) {
             sender.sendLanguageMessage(language.shyGuildPlayerNotAMemberMessage, sender.name)
             return
+        }
+
+        if (!member.roles.isEmpty()) {
+            val permission = settings.guildMemberLeavePermission.replace("<guild>", guild.name)
+
+            if (!sender.hasPermission(permission)) {
+                sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
+                return
+            }
         }
 
         val owners =

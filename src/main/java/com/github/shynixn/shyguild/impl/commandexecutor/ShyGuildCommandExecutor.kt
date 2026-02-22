@@ -361,13 +361,11 @@ class ShyGuildCommandExecutor(
             return
         }
 
-        if (!member.roles.isEmpty()) {
-            val permission = settings.guildMemberLeavePermission.replace("<guild>", guild.name)
+        val permission = settings.guildMemberLeavePermission.replace("<guild>", guild.name)
 
-            if (!sender.hasPermission(permission)) {
-                sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
-                return
-            }
+        if (!member.roles.isEmpty() && !sender.hasPermission(permission)) {
+            sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
+            return
         }
 
         val owners =
@@ -634,6 +632,7 @@ class ShyGuildCommandExecutor(
             guild.members.add(GuildMember().also {
                 it.playerName = sender.name
                 it.playerUUID = sender.uniqueId.toString()
+                it.roles = hashSetOf(guild.template!!.defaultRole)
             })
             guildService.saveGuild(guild)
             playerData.guilds.add(guild.name)

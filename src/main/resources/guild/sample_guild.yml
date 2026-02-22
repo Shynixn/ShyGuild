@@ -2,6 +2,8 @@
 name: "sample_guild"
 # Maximum amount of players that can be in a guild created from this template.
 maxPlayers: 10
+# The default role that players get assigned when they join a guild created from this template. This role should be defined in the list of roles below.
+defaultRole: "member"
 # A list of roles that players in a guild created from this template can have. Each role has got a name and a list of permissions that are assigned to players with this role.
 roles:
   - name: "owner" # The role owner should always be defined. Players automatically get assigned the role 'owner' when they create a new guild. You can assign multiple roles to a single player.

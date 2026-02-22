@@ -1,193 +1,411 @@
 # Configuration Guide
 
-This guide will walk you through creating and configuring scoreboards in ShyScoreboard. By the end, you'll understand the different scoreboard types and how to set them up for your server.
+This guide will walk you through installing and configuring ShyGuild. You'll learn how to use the built-in sample guild template and then create a fully custom guild template from scratch.
 
-## 📋 Understanding Scoreboard Types
+## 📋 Prerequisites
 
-ShyScoreboard offers three display modes, each designed for different server setups:
-
-### 🌍 GLOBAL Scoreboards
-**Best for: Servers with organized permission groups**
-
-Global scoreboards are **always visible** to players who have the required permission. They automatically appear when a player joins and update when permissions change.
-
-**✅ Use GLOBAL when:**
-
-* You have well-defined permission groups (Admin, VIP, Member, etc.)
-* You use permission plugins like LuckPerms
-* You want scoreboards to automatically show based on player roles
-
-**Example Permission:** `shyscoreboard.scoreboard.sample_scoreboard`
-
-### ⚡ COMMAND Scoreboards  
-**Best for: Servers with OP players or dynamic regions**
-
-Command scoreboards only appear after being manually added via commands. This gives you full control over when and where scoreboards are displayed.
-
-**✅ Use COMMAND when:**
-
-* You have OP players who need flexible scoreboard control
-* You want to show different scoreboards in different worlds/regions
-* You're integrating with world management or minigame plugins
-
-**Required:** Permission + `/shyscoreboard add <scoreboard>` command
-
-### 🛡️ WORLDGUARD Scoreboards
-**Best for: Servers already using WorldGuard**
-
-WorldGuard scoreboards automatically appear when players enter regions with the appropriate flag. This integrates seamlessly with your existing region setup.
-
-**✅ Use WORLDGUARD when:**
-
-* You're already using WorldGuard for region management
-* You want scoreboards tied to specific areas
-* You need support for overlapping regions
-
-**Required:** Permission + WorldGuard region flag
+* A Bukkit or Folia based Minecraft server (1.8 – 1.21)
+* **LuckPerms** (recommended) — for automatic role-based permission management
+* **PlaceholderAPI** (optional) — for placeholder support in other plugins
 
 ---
 
-## 🔧 Creating Your First Scoreboard
+## 🔧 Installation
 
-### Step 1: Prepare the Configuration
+1. Download the ShyGuild `.jar` file
+2. Place it in your server's `plugins/` folder
+3. Start (or restart) the server
+4. ShyGuild generates its default files:
 
-1. **Navigate to the scoreboard folder:**
-   ```
-   /plugins/ShyScoreboard/scoreboard/
-   ```
+```
+plugins/ShyGuild/
+├── config.yml                  # Main configuration
+├── lang/
+│   └── en_us.yml               # Language file
+└── guild/
+    └── sample_guild.yml        # Sample guild template
+```
 
-2. **Disable the sample scoreboard:**
-   - Open `sample_scoreboard.yml`
-   - Change `type: "GLOBAL"` to `type: "COMMAND"`
-   - This prevents the sample from interfering with your setup
+---
 
-3. **Create your scoreboard file:**
-   - Copy `sample_scoreboard.yml` and rename it (e.g., `lobby_scoreboard.yml`)
-   - The filename should match your scoreboard's purpose
+## 📂 Understanding the config.yml
 
-### Step 2: Configure Your Scoreboard
-
-Open your new scoreboard file and configure these key settings:
+The main configuration file controls global settings:
 
 ```yaml
-# Must match your filename (without .yml)
-name: "lobby_scoreboard"
+# Language file to use
+language: "en_us"
 
-# Choose your display type
-type: "GLOBAL"  # or "COMMAND" or "WORLDGUARD"
+# Command aliases
+commands:
+  shyguild:
+    aliases:
+      - "sguild"
 
-# Lower numbers = higher priority
-priority: 1
+# Database settings (sqlite or mysql)
+database:
+  type: "sqlite"
 
-# How often to update (60 ticks = 3 seconds)
-refreshTicks: 60
-
-# Display title (You can also use HTML color codes like #F57F17)
-title: "&b&lMy Server"
-
-# Scoreboard lines
-lines:
-  - "&7Welcome, %player_name%!"
-  - "&eOnline: %server_online%"
-  - "&6Rank: %vault_rank%"
-  - ""
-  - "&awww.myserver.com"
-```
-
-### Step 3: Apply Your Configuration
-
-Run the reload command in-game:
-```
-/shyscoreboard reload
+# Global guild settings
+global:
+  joinDelaySeconds: 3             # Delay before loading guilds on player join
+  synchronizeGuildsSeconds: 300   # Cross-server sync interval (MySQL only)
+  maxJoinGuildsPerPlayer: 3       # Max guilds a player can be in at once
+  maxCreateGuildsPerPlayer: 1     # Max guilds a player can create
+  guildNameMinLength: 3           # Min characters for guild names
+  guildNameMaxLength: 16          # Max characters for guild names
+  guildDisplayNameMinLength: 3    # Min characters for display names
+  guildDisplayNameMaxLength: 32   # Max characters for display names
+  guildMaxInvites: 5              # Max pending invites per player
+  blackList:                      # Blocked words for guild names
+    - "badword"
 ```
 
 ---
 
-## 🎮 Activating Your Scoreboard
+## 🏰 Using the Sample Guild Template
 
-The activation method depends on your chosen scoreboard type:
+ShyGuild ships with a `sample_guild.yml` template in the `plugins/ShyGuild/guild/` folder. This section walks through using it from both an admin and a player perspective.
 
-### For GLOBAL Scoreboards
+### Understanding the Sample Template
 
-1. **Grant the permission:**
-   ```
-   shyscoreboard.scoreboard.lobby_scoreboard
-   ```
+```yaml
+name: "sample_guild"
+maxPlayers: 10
+defaultRole: "member"
+roles:
+  - name: "owner"
+    allowPermissions:
+      - "shyguild.guild.%shyguild_guild_name%.delete"
+      - "shyguild.guild.%shyguild_guild_name%.role.add.owner"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.owner"
+      - "shyguild.guild.%shyguild_guild_name%.role.add.member"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.member"
+      - "shyguild.guild.%shyguild_guild_name%.role.list"
+      - "shyguild.guild.%shyguild_guild_name%.member.remove"
+      - "shyguild.guild.%shyguild_guild_name%.member.list"
+      - "shyguild.guild.%shyguild_guild_name%.invite"
+      - "shyguild.guild.%shyguild_guild_name%.leave"
+    denyPermissions: []
+  - name: "member"
+    allowPermissions:
+      - "shyguild.guild.%shyguild_guild_name%.role.list"
+      - "shyguild.guild.%shyguild_guild_name%.member.list"
+      - "shyguild.guild.%shyguild_guild_name%.leave"
+    denyPermissions: []
+```
 
-2. **That's it!** The scoreboard will automatically appear for players with this permission.
+**Key points:**
 
-### For COMMAND Scoreboards
-
-1. **Grant the permission:**
-   ```
-   shyscoreboard.scoreboard.lobby_scoreboard
-   ```
-
-2. **Add the scoreboard to players:**
-   ```
-   /shyscoreboard add lobby_scoreboard
-   ```
-
-3. **Remove when needed:**
-   ```
-   /shyscoreboard remove lobby_scoreboard
-   ```
-
-**💡 Pro Tip:** Add these commands to your world management or minigame plugins for automatic region-based display.
-
-### For WORLDGUARD Scoreboards
-
-1. **Grant the permission:**
-   ```
-   shyscoreboard.scoreboard.lobby_scoreboard
-   ```
-
-2. **Set the region flag:**
-   ```
-   /region flag spawn shyscoreboard lobby_scoreboard
-   ```
-
-3. **Players will see the scoreboard when entering the region!**
+* `%shyguild_guild_name%` is automatically replaced with the actual guild name when permissions are applied
+* The `owner` role can manage roles, kick members, send invites, and delete the guild
+* The `member` role can only view roles, view members, and leave
+* LuckPerms groups are automatically created and managed — do not edit them manually
 
 ---
 
-## 🎨 Customization Tips
+### 🛡️ Admin Perspective
 
-### Color Codes
+As an admin, you set up the server so that players can create and manage guilds on their own.
 
-* Use `&` for traditional color codes (`&a` = green, `&c` = red)
-* Use standard HTML color codes (`#F57F17`)
+#### Step 1: Assign Base Permissions
 
-### PlaceholderAPI Integration
+Give your default player group the permissions they need to interact with guilds. 
+See the [permissions](permission.md) page.
 
-* Install PlaceholderAPI for dynamic content
-* Use placeholders like `%player_name%`, `%server_online%`
-* Browse available placeholders with `/papi list`
+> **Note:** `shyguild.cmd.member.add` is an admin-only command that bypasses the invite system. Do not give it to regular players.
 
-### Line Length Optimization
+#### Step 2: Verify the Template is Loaded
 
-* Test your lines in-game to ensure they display correctly
+```bash
+/shyguild template list
+```
 
-### Performance Tuning
+You should see `sample_guild` in the output. If not, check your `plugins/ShyGuild/guild/` folder and run `/shyguild reload`.
 
-* Higher `refreshTicks` = better performance
-* Lower `refreshTicks` = more responsive updates
-* Start with 60 ticks (3 seconds) and adjust as needed
+---
+
+### 👤 Player Perspective
+
+Once an admin has set up the permissions, players can create and manage guilds entirely on their own.
+
+#### Step 1: Create a Guild
+
+```bash
+/shyguild create sample_guild dragons The_Dragons
+```
+
+* `sample_guild` — the template to use
+* `dragons` — the internal guild name (lowercase, alphanumeric and hyphens only)
+* `The_Dragons` — the display name (underscores become spaces: "The Dragons")
+
+The player who creates the guild is automatically assigned the `owner` role.
+
+#### Step 2: Invite Members
+
+The guild owner invites other online players:
+
+```bash
+/shyguild member invite dragons Alex
+/shyguild member invite dragons Steve
+```
+
+Invited players see a message in chat and can accept:
+
+```bash
+/shyguild member accept dragons
+```
+
+Once accepted, they join the guild and receive the default role specified in the template.
+
+#### Step 3: Manage Roles
+
+The owner can assign the `member` role to organize their guild:
+
+```bash
+/shyguild role add dragons member Alex
+/shyguild role add dragons member Steve
+```
+
+#### Step 4: View Guild Info
+
+Any member with the right permissions can view the roster and roles:
+
+```bash
+# List all members and their roles
+/shyguild member list dragons
+
+# List all available roles in the guild
+/shyguild role list dragons
+
+# List roles of a specific player
+/shyguild role list dragons Alex
+```
+
+#### Step 5: Remove Members or Leave
+
+The owner can kick a member:
+
+```bash
+/shyguild member remove dragons Steve
+```
+
+A member can leave voluntarily:
+
+```bash
+/shyguild member leave dragons
+```
+
+> **⚠️ Owner restriction:** The last remaining owner cannot leave. Transfer ownership first by assigning the `owner` role to another player.
+
+#### Step 6: Delete the Guild
+
+When the guild is no longer needed, the owner can delete it:
+
+```bash
+/shyguild delete dragons
+```
+
+---
+
+## ⚽ Full Example: Soccer Club Template
+
+This example shows how to create a custom guild template with four roles — `owner`, `coach`, `captain`, and `player` — to manage a soccer club on your server.
+
+### Step 1: Create the Template File
+
+Create a new file at `plugins/ShyGuild/guild/soccer_club.yml`:
+
+```yaml
+name: "soccer_club"
+maxPlayers: 30
+defaultRole: "player"
+roles:
+  # The club owner has full control over the guild
+  - name: "owner"
+    allowPermissions:
+      - "shyguild.guild.%shyguild_guild_name%.delete"
+      - "shyguild.guild.%shyguild_guild_name%.role.add.owner"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.owner"
+      - "shyguild.guild.%shyguild_guild_name%.role.add.coach"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.coach"
+      - "shyguild.guild.%shyguild_guild_name%.role.add.captain"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.captain"
+      - "shyguild.guild.%shyguild_guild_name%.role.add.player"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.player"
+      - "shyguild.guild.%shyguild_guild_name%.role.list"
+      - "shyguild.guild.%shyguild_guild_name%.member.remove"
+      - "shyguild.guild.%shyguild_guild_name%.member.list"
+      - "shyguild.guild.%shyguild_guild_name%.invite"
+      - "shyguild.guild.%shyguild_guild_name%.leave"
+    denyPermissions: []
+
+  # Coaches can manage captains and players, but cannot delete the club or assign owners
+  - name: "coach"
+    allowPermissions:
+      - "shyguild.guild.%shyguild_guild_name%.role.add.captain"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.captain"
+      - "shyguild.guild.%shyguild_guild_name%.role.add.player"
+      - "shyguild.guild.%shyguild_guild_name%.role.remove.player"
+      - "shyguild.guild.%shyguild_guild_name%.role.list"
+      - "shyguild.guild.%shyguild_guild_name%.member.remove"
+      - "shyguild.guild.%shyguild_guild_name%.member.list"
+      - "shyguild.guild.%shyguild_guild_name%.invite"
+      - "shyguild.guild.%shyguild_guild_name%.leave"
+    denyPermissions: []
+
+  # Captains can invite new players and view the roster, but cannot manage roles
+  - name: "captain"
+    allowPermissions:
+      - "shyguild.guild.%shyguild_guild_name%.role.list"
+      - "shyguild.guild.%shyguild_guild_name%.member.list"
+      - "shyguild.guild.%shyguild_guild_name%.invite"
+      - "shyguild.guild.%shyguild_guild_name%.leave"
+    denyPermissions: []
+
+  # Regular players can only view the roster and leave
+  - name: "player"
+    allowPermissions:
+      - "shyguild.guild.%shyguild_guild_name%.role.list"
+      - "shyguild.guild.%shyguild_guild_name%.member.list"
+      - "shyguild.guild.%shyguild_guild_name%.leave"
+    denyPermissions: []
+```
+
+### Step 2: Set Up Permissions
+
+Grant your default player group access to the new template:
+
+```bash
+# Allow using the soccer_club template (in addition to existing permissions)
+/lp group default permission set shyguild.template.soccer_club true
+```
+
+### Step 3: Reload the Plugin
+
+```bash
+/shyguild reload
+```
+
+Verify the template is loaded:
+
+```bash
+/shyguild template list
+```
+
+You should see both `sample_guild` and `soccer_club`.
+
+### Step 4: Create a Soccer Club
+
+A player creates their club:
+
+```bash
+/shyguild create soccer_club united-fc United_FC
+```
+
+The creator is automatically the `owner`.
+
+### Step 5: Build the Roster
+
+The owner invites members and assigns roles:
+
+```bash
+# Invite players
+/shyguild member invite united-fc Alex
+/shyguild member invite united-fc Steve
+/shyguild member invite united-fc Bob
+/shyguild member invite united-fc Charlie
+```
+
+After they accept:
+
+```bash
+# Assign a coach
+/shyguild role add united-fc coach Alex
+
+# Assign a captain
+/shyguild role add united-fc captain Steve
+```
+
+### Step 6: Day-to-Day Management
+
+**The coach** (Alex) can now independently manage the team:
+
+```bash
+# Coach promotes Bob to captain
+/shyguild role add united-fc captain Bob
+
+# Coach invites a new player
+/shyguild member invite united-fc Dave
+
+# Coach removes a role from a player
+/shyguild role remove united-fc captain Bob
+
+# Coach kicks a player from the club
+/shyguild member remove united-fc Charlie
+```
+
+**The captain** (Steve) can recruit but not manage roles:
+
+```bash
+# Captain invites a new player
+/shyguild member invite united-fc Eve
+
+# Captain views the roster
+/shyguild member list united-fc
+```
+
+**A regular player** (Bob) can only view and leave:
+
+```bash
+# Player views the roster
+/shyguild member list united-fc
+
+# Player views available roles
+/shyguild role list united-fc
+
+# Player leaves the club
+/shyguild member leave united-fc
+```
+
+### Role Hierarchy Summary
+
+| Role | Invite | Kick | Manage Roles | Delete Club |
+|------|--------|------|--------------|-------------|
+| 👑 Owner | ✅ | ✅ | All roles | ✅ |
+| 🎓 Coach | ✅ | ✅ | Captain & Player | ❌ |
+| ⚓ Captain | ✅ | ❌ | None | ❌ |
+| ⚽ Player | ❌ | ❌ | None | ❌ |
 
 ---
 
 ## ❓ Common Issues
 
-**Q: My scoreboard isn't showing**
+**Q: My guild template isn't showing in `/shyguild template list`**
 
-* Check that the player has the required permission
-* Verify the scoreboard type matches your setup method
-* Ensure you ran `/shyscoreboard reload` after changes
+* Ensure the `.yml` file is in `plugins/ShyGuild/guild/`
+* Check the YAML syntax is valid (indentation matters!)
+* Run `/shyguild reload` after adding new template files
 
-* Verify PlaceholderAPI is installed for placeholder support
+**Q: Role permissions aren't being applied**
 
-**Q: Multiple scoreboards are conflicting**
+* Verify that **LuckPerms** is installed — role permissions require it
+* Do not manually edit the LuckPerms groups created by ShyGuild
+* Check that the `allowPermissions` in your template use the correct permission nodes
 
-* Check the `priority` values (lower numbers = higher priority)
-* Ensure different scoreboards have different names
-* Use `/shyscoreboard update` to refresh player scoreboards
+**Q: A player can't create a guild**
+
+* Ensure they have `shyguild.command`, `shyguild.cmd.create`, and `shyguild.template.<template>` permissions
+* Check `maxCreateGuildsPerPlayer` in `config.yml` — they may have hit the limit
+
+**Q: A player can't accept an invite**
+
+* Ensure they have `shyguild.command` and `shyguild.cmd.member.accept` permissions
+* Check `maxJoinGuildsPerPlayer` in `config.yml` — they may have hit the limit
+* Check `maxPlayers` in the guild template — the guild may be full
+
+**Q: Cross-server guild data isn't syncing**
+
+* Set `database.type` to `mysql` in `config.yml`
+* Configure the JDBC connection settings with your MySQL server details
+* Adjust `synchronizeGuildsSeconds` to a lower value for faster sync

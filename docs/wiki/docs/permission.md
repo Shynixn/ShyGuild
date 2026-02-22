@@ -20,6 +20,7 @@ These permissions control who can **execute** each command.
 | `shyguild.command` | 👤 User | Use the base `/shyguild` command | Running any command |
 | `shyguild.cmd.create` | 👤 User | Create new guilds | `/shyguild create` |
 | `shyguild.cmd.delete` | 👤 User | Delete guilds | `/shyguild delete` |
+| `shyguild.template.<template>` | 👤 User | Use a specific guild template | Creating a guild with that template |
 | `shyguild.cmd.role.add` | 👤 User | Assign roles to guild members | `/shyguild role add` |
 | `shyguild.cmd.role.remove` | 👤 User | Remove roles from guild members | `/shyguild role remove` |
 | `shyguild.cmd.role.list` | 👤 User | List roles of a guild or player | `/shyguild role list` |
@@ -40,7 +41,6 @@ These permissions control **per-guild** actions. They are typically assigned aut
 
 | Permission | Level | Description | Required For |
 |------------|-------|-------------|--------------|
-| `shyguild.template.<template>` | 👤 User | Use a specific guild template | Creating a guild with that template |
 | `shyguild.guild.<guild>.delete` | 👤 User | Delete a specific guild | `/shyguild delete <guild>` |
 | `shyguild.guild.<guild>.role.add.<role>` | 👤 User | Assign a specific role in a guild | `/shyguild role add <guild> <role>` |
 | `shyguild.guild.<guild>.role.remove.<role>` | 👤 User | Remove a specific role in a guild | `/shyguild role remove <guild> <role>` |

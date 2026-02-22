@@ -13,6 +13,8 @@ class GuildTemplate : Element {
      */
     var roles: List<GuildRoleTemplate> = ArrayList()
 
+    var defaultRole : String = ""
+
     /**
      * Maximum amount of players that can be in the guild.
      */

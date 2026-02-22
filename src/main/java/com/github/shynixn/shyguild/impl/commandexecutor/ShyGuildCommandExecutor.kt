@@ -119,6 +119,11 @@ class ShyGuildCommandExecutor(
                 return null
             }
 
+            // check if it follows the regex a-z, A-Z, 0-9 and - only
+            if (!name.matches(Regex("^[a-zA-Z0-9-]+$"))) {
+                return null
+            }
+
             return name
         }
 

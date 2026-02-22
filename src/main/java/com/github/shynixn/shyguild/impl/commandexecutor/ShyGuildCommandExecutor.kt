@@ -188,17 +188,19 @@ class ShyGuildCommandExecutor(
                 permission(settings.commandPermission)
                 permissionMessage(language.shyGuildNoPermissionCommand.text)
                 subCommand("create") {
+                    permission(settings.createCmdPermission)
                     toolTip {
-                        language.shyGuildTemplateListCommandHint.text
+                        language.shyGuildCreateCommandHint.text
                     }
                     builder().argument("template").validator(templateMustExists).tabs(templateTabs).argument("name")
                         .validator(guildNameValidator).tabs { listOf("<name>") }.argument("displayName")
                         .validator(guildDisplayNameValidator).tabs { listOf("<displayName>") }
                         .execute { sender, template, name, displayName ->
-                            createGuild(sender, template, name, displayName)
+                            createGuild(sender, template, name, displayName.replace("_", " "))
                         }
                 }
                 subCommand("delete") {
+                    permission(settings.deleteCmdPermission)
                     toolTip {
                         language.shyGuildDeleteCommandHint.text
                     }
@@ -209,6 +211,7 @@ class ShyGuildCommandExecutor(
                 }
                 subCommand("role") {
                     subCommand("add") {
+                        permission(settings.addRoleCmdPermission)
                         toolTip {
                             language.shyGuildAddRoleCommandHint.text
                         }
@@ -221,6 +224,7 @@ class ShyGuildCommandExecutor(
                             }
                     }
                     subCommand("remove") {
+                        permission(settings.removeRoleCmdPermission)
                         toolTip {
                             language.shyGuildRemoveRoleCommandHint.text
                         }
@@ -233,6 +237,7 @@ class ShyGuildCommandExecutor(
                             }
                     }
                     subCommand("list") {
+                        permission(settings.listRoleCmdPermission)
                         toolTip {
                             language.shyGuildListRolesCommandHint.text
                         }
@@ -244,19 +249,9 @@ class ShyGuildCommandExecutor(
                             }
                     }
                 }
-                subCommand("template") {
-                    subCommand("list") {
-                        permission(settings.templateListPermission)
-                        toolTip {
-                            language.shyGuildTemplateListCommandHint.text
-                        }
-                        builder().execute { sender ->
-                            listTemplates(sender)
-                        }
-                    }
-                }
                 subCommand("member") {
                     subCommand("add") {
+                        permission(settings.addMemberPermission)
                         toolTip {
                             language.shyGuildMemberAddCommandHint.text
                         }
@@ -266,17 +261,8 @@ class ShyGuildCommandExecutor(
                                 addMemberToGuild(sender, guild, playerNameOrId)
                             }
                     }
-                    subCommand("invite") {
-                        toolTip {
-                            language.shyGuildMemberInviteCommandHint.text
-                        }
-                        builder().argument(settings.guildArgument).validator(guildMustExist).tabs(guildTabs)
-                            .argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
-                            .executePlayer(senderHasToBePlayer) { sender, guild, player ->
-                                inviteMemberToGuild(sender, guild, player)
-                            }
-                    }
                     subCommand("remove") {
+                        permission(settings.removeMemberPermission)
                         toolTip {
                             language.shyGuildMemberRemoveCommandHint.text
                         }
@@ -287,6 +273,7 @@ class ShyGuildCommandExecutor(
                             }
                     }
                     subCommand("list") {
+                        permission(settings.listMembersPermission)
                         toolTip {
                             language.shyGuildMemberListCommandHint.text
                         }
@@ -295,7 +282,19 @@ class ShyGuildCommandExecutor(
                                 listMembers(sender, guild)
                             }
                     }
+                    subCommand("invite") {
+                        permission(settings.inviteMemberPermission)
+                        toolTip {
+                            language.shyGuildMemberInviteCommandHint.text
+                        }
+                        builder().argument(settings.guildArgument).validator(guildMustExist).tabs(guildTabs)
+                            .argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                            .executePlayer(senderHasToBePlayer) { sender, guild, player ->
+                                inviteMemberToGuild(sender, guild, player)
+                            }
+                    }
                     subCommand("accept") {
+                        permission(settings.acceptMemberPermission)
                         toolTip {
                             language.shyGuildMemberAcceptCommandHint.text
                         }
@@ -304,9 +303,30 @@ class ShyGuildCommandExecutor(
                                 acceptMemberInvite(sender, guildName)
                             }
                     }
+                    subCommand("leave") {
+                        permission(settings.leaveMemberPermission)
+                        toolTip {
+                            language.shyGuildLeaveCommandHint.text
+                        }
+                        builder().argument(settings.guildArgument).validator(guildMustExist).tabs(guildTabs)
+                            .executePlayer(senderHasToBePlayer) { sender, guild ->
+                                leaveGuild(sender, guild)
+                            }
+                    }
+                }
+                subCommand("template") {
+                    subCommand("list") {
+                        permission(settings.templateListCmdPermission)
+                        toolTip {
+                            language.shyGuildTemplateListCommandHint.text
+                        }
+                        builder().execute { sender ->
+                            listTemplates(sender)
+                        }
+                    }
                 }
                 subCommand("reload") {
-                    permission(settings.reloadPermission)
+                    permission(settings.reloadCmdPermission)
                     toolTip {
                         language.shyGuildReloadCommandHint.text
                     }
@@ -319,6 +339,44 @@ class ShyGuildCommandExecutor(
                     }
                 }.helpCommand()
             })
+    }
+
+    private suspend fun leaveGuild(sender: Player, guild: Guild) {
+        val permission = settings.guildMemberLeavePermission.replace("<guild>", guild.name)
+
+        if (!sender.hasPermission(permission)) {
+            sender.sendLanguageMessage(language.shyGuildNoPermissionCommand)
+            return
+        }
+
+        val targetPlayerData = cachePlayerDataRepository.getByPlayer(sender)
+
+        if (targetPlayerData == null) {
+            sender.sendLanguageMessage(language.shyGuildPlayerNotFoundMessage, sender.name)
+            return
+        }
+
+        val member = guild.getMember(sender)
+
+        if (member == null) {
+            sender.sendLanguageMessage(language.shyGuildPlayerNotAMemberMessage, sender.name)
+            return
+        }
+
+        val owners =
+            guild.members.filter { e -> e.roles.contains("owner") && e.playerUUID != sender.uniqueId.toString() }
+
+        if (owners.isEmpty()) {
+            sender.sendLanguageMessage(language.shyGuildCannotLeaveOwnerGuildMessage, guild.name)
+            return
+        }
+
+        guild.members.remove(member)
+        guildService.saveGuild(guild)
+        targetPlayerData.createdGuilds.remove(guild.name)
+        targetPlayerData.guilds.remove(guild.name)
+        cachePlayerDataRepository.save(targetPlayerData)
+        sender.sendLanguageMessage(language.shyGuildLeaveSuccessMessage, sender.name, guild.name)
     }
 
     private fun listRoles(sender: CommandSender, guild: Guild, playerNameOrId: String? = null) {
@@ -367,9 +425,22 @@ class ShyGuildCommandExecutor(
             return
         }
 
+        val targetPlayerData = cachePlayerDataRepository.getByPlayerUUID(UUID.fromString(member.playerUUID))
+
+        if (targetPlayerData == null) {
+            sender.sendLanguageMessage(language.shyGuildPlayerNotFoundMessage, playerNameOrId)
+            return
+        }
+
         member.roles.add(role.name)
         guildService.applyGuildMemberPermissions(UUID.fromString(member.playerUUID), guild)
         guildService.saveGuild(guild)
+
+        if (role.name == "owner") {
+            targetPlayerData.createdGuilds.add(guild.name)
+            cachePlayerDataRepository.save(targetPlayerData)
+        }
+
         sender.sendLanguageMessage(language.shyGuildAssignRoleSuccessMessage, role.name, playerNameOrId)
     }
 
@@ -390,9 +461,22 @@ class ShyGuildCommandExecutor(
             return
         }
 
+        val targetPlayerData = cachePlayerDataRepository.getByPlayerUUID(UUID.fromString(member.playerUUID))
+
+        if (targetPlayerData == null) {
+            sender.sendLanguageMessage(language.shyGuildPlayerNotFoundMessage, playerNameOrId)
+            return
+        }
+
         member.roles.remove(role.name)
         guildService.applyGuildMemberPermissions(UUID.fromString(member.playerUUID), guild)
         guildService.saveGuild(guild)
+
+        if (role.name == "owner") {
+            targetPlayerData.createdGuilds.remove(guild.name)
+            cachePlayerDataRepository.save(targetPlayerData)
+        }
+
         sender.sendLanguageMessage(language.shyGuildRemoveRoleSuccessMessage, role.name, playerNameOrId)
     }
 
@@ -495,25 +579,8 @@ class ShyGuildCommandExecutor(
             sender.sendLanguageMessage(language.shyGuildPlayerNotAMemberMessage, playerNameOrId)
             return
         }
-        val uuid = try {
-            UUID.fromString(playerNameOrId)
-        } catch (_: Exception) {
-            null
-        }
 
-        var targetPlayerData: PlayerInformation? = null
-
-        if (uuid != null) {
-            targetPlayerData = cachePlayerDataRepository.getByPlayerUUID(uuid)
-        }
-
-        if (targetPlayerData == null) {
-            val player = Bukkit.getPlayer(playerNameOrId)
-
-            if (player != null) {
-                targetPlayerData = cachePlayerDataRepository.getByPlayer(player)
-            }
-        }
+        val targetPlayerData = cachePlayerDataRepository.getByPlayerUUID(UUID.fromString(member.playerUUID))
 
         if (targetPlayerData == null) {
             sender.sendLanguageMessage(language.shyGuildPlayerNotFoundMessage, playerNameOrId)
@@ -571,7 +638,7 @@ class ShyGuildCommandExecutor(
     }
 
     private suspend fun createGuild(sender: CommandSender, template: GuildTemplate, name: String, displayName: String) {
-        if (!sender.hasPermission(settings.templateUsePermission + template.name)) {
+        if (!sender.hasPermission(settings.templateUsePermission.replace("<template>", template.name))) {
             sender.sendLanguageMessage(language.shyGuildNoPermissionTemplateMessage, template.name)
             return
         }
@@ -596,6 +663,7 @@ class ShyGuildCommandExecutor(
                 it.playerUUID = sender.uniqueId.toString()
                 it.roles.add("owner")
             })
+
             val playerData = cachePlayerDataRepository.getByPlayer(sender) ?: return
             if (playerData.guilds.size >= settings.maxJoinGuildsPerPlayer) {
                 sender.sendLanguageMessage(language.shyGuildMemberMaxGuildsReachedMessage, sender.name)

@@ -97,4 +97,10 @@ class ShyGuildLanguageImpl : ShyGuildLanguage {
  override var shyGuildMemberGuildFullMessage = LanguageItem(  "[&9ShyGuild&f]&c Failed to join guild %shyguild_param_1% because it is already full.")
 
  override var shyGuildCreateMaxGuildsReachedMessage = LanguageItem(  "[&9ShyGuild&f]&c You have already reached the maximum number of guilds you can create.")
+
+ override var shyGuildLeaveCommandHint = LanguageItem(  "Leaves the given guild.")
+
+ override var shyGuildLeaveSuccessMessage = LanguageItem(  "[&9ShyGuild&f] Successfully left guild %shyguild_param_1%.")
+
+ override var shyGuildCannotLeaveOwnerGuildMessage = LanguageItem(  "[&9ShyGuild&f]&c You cannot leave guild %shyguild_param_1% because you are the only owner. Please assign the owner role to another player and try again.")
 }

@@ -95,4 +95,10 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildMemberGuildFullMessage: LanguageItem
 
   var shyGuildCreateMaxGuildsReachedMessage: LanguageItem
+
+  var shyGuildLeaveCommandHint: LanguageItem
+
+  var shyGuildLeaveSuccessMessage: LanguageItem
+
+  var shyGuildCannotLeaveOwnerGuildMessage: LanguageItem
 }

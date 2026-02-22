@@ -148,3 +148,12 @@ shyGuildMemberGuildFullMessage:
 shyGuildCreateMaxGuildsReachedMessage:
     type: "CHAT"
     text: "[&9ShyGuild&f]&c You have already reached the maximum number of guilds you can create."
+shyGuildLeaveCommandHint:
+    type: "CHAT"
+    text: "Leaves the given guild."
+shyGuildLeaveSuccessMessage:
+    type: "CHAT"
+    text: "[&9ShyGuild&f] Successfully left guild %shyguild_param_1%."
+shyGuildCannotLeaveOwnerGuildMessage:
+    type: "CHAT"
+    text: "[&9ShyGuild&f]&c You cannot leave guild %shyguild_param_1% because you are the only owner. Please assign the owner role to another player and try again."

@@ -87,7 +87,9 @@ class ShyGuildCommandExecutor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.shyGuildTemplateNotFoundMessage.text.format(openArgs[0])
+            return placeHolderService.resolvePlaceHolder(
+                language.shyGuildTemplateNotFoundMessage.text, null, mapOf("0" to openArgs[0])
+            )
         }
     }
 
@@ -95,11 +97,14 @@ class ShyGuildCommandExecutor(
         override suspend fun transform(
             sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
         ): Guild? {
-            return guildService.getGuildCache().firstOrNull { e -> e.name.equals(openArgs[0], true) }
+            val guild = guildService.getGuildCache().firstOrNull { e -> e.name.equals(openArgs[0], true) }
+            return guild
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.shyGuildGuildNotFoundMessage.text.format(openArgs[0])
+            return placeHolderService.resolvePlaceHolder(
+                language.shyGuildGuildNotFoundMessage.text, null, mapOf("0" to openArgs[0])
+            )
         }
     }
 
@@ -384,7 +389,7 @@ class ShyGuildCommandExecutor(
         sender.sendLanguageMessage(language.shyGuildLeaveSuccessMessage, sender.name, guild.name)
     }
 
-    private fun listRoles(sender: CommandSender, guild: Guild, playerNameOrId: String? = null) {
+    private suspend fun listRoles(sender: CommandSender, guild: Guild, playerNameOrId: String? = null) {
         val permission = settings.guildListRolePermission.replace("<guild>", guild.name)
 
         if (!sender.hasPermission(permission)) {
@@ -400,7 +405,7 @@ class ShyGuildCommandExecutor(
                 return
             }
 
-            sender.sendLanguageMessage(language.shyGuildRoleListPlayerMessage)
+            sender.sendLanguageMessage(language.shyGuildRoleListPlayerMessage, playerNameOrId)
             for (role in member.roles) {
                 sender.sendMessage("- $role")
             }
@@ -409,7 +414,7 @@ class ShyGuildCommandExecutor(
 
         sender.sendLanguageMessage(language.shyGuildRoleListAllMessage)
         for (role in guild.template!!.roles) {
-            sender.sendMessage("- $role")
+            sender.sendMessage("- ${role.name}")
         }
     }
 
@@ -471,6 +476,16 @@ class ShyGuildCommandExecutor(
         if (targetPlayerData == null) {
             sender.sendLanguageMessage(language.shyGuildPlayerNotFoundMessage, playerNameOrId)
             return
+        }
+
+        if (role.name == "owner") {
+            val owners =
+                guild.members.filter { e -> e.roles.contains("owner") && e.playerUUID != member.playerUUID }
+
+            if (owners.isEmpty()) {
+                sender.sendLanguageMessage(language.shyGuildThereCannotBeNoOwnerMessage, guild.name)
+                return
+            }
         }
 
         member.roles.remove(role.name)
@@ -599,7 +614,7 @@ class ShyGuildCommandExecutor(
         sender.sendLanguageMessage(language.shyGuildMemberRemoveSuccessMessage, playerNameOrId, guild.name)
     }
 
-    private fun listMembers(sender: CommandSender, guild: Guild) {
+    private suspend fun listMembers(sender: CommandSender, guild: Guild) {
         val permission = settings.guildMemberListPermission.replace("<guild>", guild.name)
 
         if (!sender.hasPermission(permission)) {
@@ -687,6 +702,9 @@ class ShyGuildCommandExecutor(
         }
 
         guildService.saveGuild(guild)
+        if (sender is Player) {
+            guildService.applyGuildMemberPermissions(sender.uniqueId, guild)
+        }
         sender.sendLanguageMessage(language.shyGuildCreateSuccessMessage, guildName)
     }
 
@@ -698,10 +716,15 @@ class ShyGuildCommandExecutor(
             return
         }
 
-        val playerData = cachePlayerDataRepository.getByPlayer(sender as Player) ?: return
-        playerData.guilds.remove(guild.name)
-        playerData.createdGuilds.remove(guild.name)
-        cachePlayerDataRepository.save(playerData)
+        if (sender is Player) {
+            val playerData = cachePlayerDataRepository.getByPlayer(sender)
+            if (playerData != null) {
+                playerData.guilds.remove(guild.name)
+                playerData.createdGuilds.remove(guild.name)
+                cachePlayerDataRepository.save(playerData)
+            }
+        }
+
         guildService.deleteGuild(guild)
         sender.sendLanguageMessage(language.shyGuildDeleteSuccessMessage, guild.name)
     }
@@ -714,10 +737,10 @@ class ShyGuildCommandExecutor(
         }
     }
 
-    private fun CommandSender.sendLanguageMessage(languageItem: LanguageItem, vararg args: String) {
+    private suspend fun CommandSender.sendLanguageMessage(languageItem: LanguageItem, vararg args: String) {
         val sender = this
         plugin.launch(plugin.globalRegionDispatcher) {
             chatMessageService.sendLanguageMessage(sender, languageItem, *args)
-        }
+        }.join()
     }
 }

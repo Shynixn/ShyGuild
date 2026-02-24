@@ -36,11 +36,6 @@ class Guild : Element {
     var members: MutableList<GuildMember> = ArrayList()
 
     /**
-     * Additional role modifications.
-     */
-    var roleModifications: List<GuildRoleTemplate> = ArrayList()
-
-    /**
      * Template
      */
     @JsonIgnore

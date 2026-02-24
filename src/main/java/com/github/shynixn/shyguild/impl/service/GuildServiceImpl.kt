@@ -14,10 +14,13 @@ import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import java.util.Date
 import java.util.UUID
+import java.util.logging.Level
 
 class GuildServiceImpl(
+    private val plugin: Plugin,
     private val settings: ShyGuildSettings,
     coroutineHandler: CoroutineHandler,
     private val guildMetaSqlRepository: GuildMetaSqlRepository,
@@ -68,7 +71,9 @@ class GuildServiceImpl(
         }
 
         val result = ArrayList<Guild>()
-        val guildNames = ArrayList(playerInfo.guilds)
+        val guildNames = HashSet<String>()
+        guildNames.addAll(playerInfo.guilds)
+        guildNames.addAll(playerInfo.createdGuilds)
 
         for (guildName in guildNames) {
             if (guilds.containsKey(guildName)) {
@@ -83,6 +88,8 @@ class GuildServiceImpl(
             } else {
                 // Guild was deleted.
                 playerInfo.guilds.remove(guildName)
+                playerInfo.createdGuilds.remove(guildName)
+                cachePlayerDataRepository.save(playerInfo)
             }
         }
 
@@ -146,7 +153,11 @@ class GuildServiceImpl(
         guild: Guild
     ) {
         guilds.remove(guild.name)
-        permissionPluginService.deletePermissions(guild)
+        try {
+            permissionPluginService.deletePermissions(guild)
+        } catch (e: Exception) {
+            plugin.logger.log(Level.SEVERE, "Failed to communicate with permission plugin!", e)
+        }
         guildMetaSqlRepository.delete(guild)
     }
 
@@ -154,13 +165,21 @@ class GuildServiceImpl(
         playerUUID: UUID,
         guild: Guild
     ) {
-        permissionPluginService.applyRoles(playerUUID, guild)
+        try {
+            permissionPluginService.applyRoles(playerUUID, guild)
+        } catch (e: Exception) {
+            plugin.logger.log(Level.SEVERE, "Failed to communicate with permission plugin!", e)
+        }
     }
 
     private suspend fun refreshGuild(guild: Guild) {
         guild.template = templateService.getAll().firstOrNull { e -> e.name == guild.templateName }
         guilds[guild.name] = guild
-        permissionPluginService.createOrUpdatePermissions(guild)
+        try {
+            permissionPluginService.createOrUpdatePermissions(guild)
+        } catch (e: Exception) {
+            plugin.logger.log(Level.SEVERE, "Failed to communicate with permission plugin!", e)
+        }
     }
 
     override suspend fun sendInvite(invite: GuildInvite): Boolean {

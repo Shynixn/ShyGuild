@@ -118,12 +118,13 @@ class ShyGuildDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService(),
                 module.getService()
             )
         }
         module.addService<PermissionPluginService> {
             if (plugin.server.pluginManager.getPlugin("LuckPerms") != null) {
-                LuckPermsPermissionServiceImpl(module.getService())
+                LuckPermsPermissionServiceImpl(module.getService(), module.getService())
             } else {
                 EmptyPermissionPluginServiceImpl()
             }

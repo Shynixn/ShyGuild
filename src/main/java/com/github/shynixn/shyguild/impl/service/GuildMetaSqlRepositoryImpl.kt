@@ -123,6 +123,7 @@ class GuildMetaSqlRepositoryImpl(
             }
         }
 
+        result?.isPersisted = true
         return result
     }
 
@@ -140,6 +141,7 @@ class GuildMetaSqlRepositoryImpl(
                                 val retrievedValue = objectMapper.readValue<Guild>(
                                     data, typeReference
                                 )
+                                retrievedValue.isPersisted = true
                                 yield(retrievedValue)
                             }
                         }

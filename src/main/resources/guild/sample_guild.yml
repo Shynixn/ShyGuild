@@ -18,13 +18,13 @@ roles:
       - "shyguild.guild.%shyguild_guild_name%.role.list" # Allows to list all roles.
       - "shyguild.guild.%shyguild_guild_name%.member.remove" # Only a member of role owner can remove a player from the guild.
       - "shyguild.guild.%shyguild_guild_name%.member.list" # Allows to list all members of the guild.
-      - "shyguild.guild.%shyguild_guild_name%.invite" # Only a member of role owner can send out invites for this guild.
-      - "shyguild.guild.%shyguild_guild_name%.leave" # Players should be able to leave the guild on their own.
+      - "shyguild.guild.%shyguild_guild_name%.member.invite" # Only a member of role owner can send out invites for this guild.
+      - "shyguild.guild.%shyguild_guild_name%.member.leave" # Players should be able to leave the guild on their own.
     # Permissions that are denied to players with this role. Permissions require the plugin LuckPerms to be installed.
     denyPermissions: [ ]
   - name: "member"
     allowPermissions:
       - "shyguild.guild.%shyguild_guild_name%.role.list" # Allows to list all roles.
       - "shyguild.guild.%shyguild_guild_name%.member.list" # Allows to list all members of the guild.
-      - "shyguild.guild.%shyguild_guild_name%.leave" # Players should be able to leave the guild on their own.
+      - "shyguild.guild.%shyguild_guild_name%.member.leave" # Players should be able to leave the guild on their own.
     denyPermissions: [ ]

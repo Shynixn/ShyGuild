@@ -157,3 +157,6 @@ shyGuildLeaveSuccessMessage:
 shyGuildCannotLeaveOwnerGuildMessage:
     type: "CHAT"
     text: "[&9ShyGuild&f]&c You cannot leave guild %shyguild_param_1% because you are the only owner. Please assign the owner role to another player and try again."
+shyGuildThereCannotBeNoOwnerMessage:
+    type: "CHAT"
+    text: "[&9ShyGuild&f]&c There has to be at least one owner in guild %shyguild_param_1%. Please assign the owner role to another player before you can remove it from yourself."

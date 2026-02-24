@@ -11,9 +11,13 @@ import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
 import com.github.shynixn.mcutils.common.repository.CacheRepository
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.database.impl.SqliteConnectionServiceImpl
+import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
+import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import com.github.shynixn.shyguild.entity.GuildTemplate
+import com.github.shynixn.shyguild.entity.PlayerInformation
 import com.github.shynixn.shyguild.enumeration.PlaceHolder
 import com.github.shynixn.shyguild.impl.commandexecutor.ShyGuildCommandExecutor
 import com.github.shynixn.shyguild.impl.listener.ShyGuildListener
@@ -30,6 +34,7 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
     private var module: DependencyInjectionModule? = null
 
     companion object {
+        val guildNameKey = "guildName"
         private val areLegacyVersionsIncluded: Boolean by lazy {
             try {
                 Class.forName("com.github.shynixn.shyguild.lib.com.github.shynixn.mcutils.packet.nms.v1_8_R3.PacketSendServiceImpl")
@@ -93,7 +98,6 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
         }
 
         logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
-
         if (mcCoroutineConfiguration.isFoliaLoaded && !checkIfFoliaIsLoadable()) {
             logger.log(Level.SEVERE, "================================================")
             logger.log(Level.SEVERE, "ShyGuild for Folia requires ShyGuild-Premium-Folia.jar")
@@ -117,6 +121,12 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
             settings.maxJoinGuildsPerPlayer = plugin.config.getInt("global.maxJoinGuildsPerPlayer")
             settings.maxCreateGuildsPerPlayer = plugin.config.getInt("global.maxCreateGuildsPerPlayer")
             settings.synchronizeGuildsSeconds = plugin.config.getInt("global.synchronizeGuildsSeconds")
+            settings.blackList = plugin.config.getStringList("global.blackList")
+            settings.guildNameMinLength = plugin.config.getInt("global.guildNameMinLength")
+            settings.guildNameMaxLength = plugin.config.getInt("global.guildNameMaxLength")
+            settings.guildDisplayNameMinLength = plugin.config.getInt("global.guildDisplayNameMinLength")
+            settings.guildDisplayNameMaxLength = plugin.config.getInt("global.guildDisplayNameMaxLength")
+            settings.guildMaxInvites = plugin.config.getInt("global.guildMaxInvites")
         }
         settings.reload()
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
@@ -130,11 +140,13 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
             placeHolderService,
             sqlConnectionService
         ).build()
+        val guildService = module!!.getService<GuildService>()
 
         // Register PlaceHolders
         PlaceHolder.registerAll(
             this,
             this.module!!.getService<PlaceHolderService>(),
+            module!!.getService<GuildService>()
         )
 
         // Register Listeners
@@ -143,8 +155,15 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
         // Register CommandExecutor
         module!!.getService<ShyGuildCommandExecutor>()
         val templateService = module!!.getService<CacheRepository<GuildTemplate>>()
+        val playerDataRepository = module!!.getService<PlayerDataRepository<PlayerInformation>>()
+        val guildMetaRepository = module!!.getService<GuildMetaSqlRepository>()
         plugin.launch {
             templateService.getAll()
+            playerDataRepository.createIfNotExist()
+            guildMetaRepository.createIfNotExist()
+            for (player in Bukkit.getOnlinePlayers()) {
+                guildService.getGuilds(player)
+            }
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled ShyGuild " + plugin.description.version + " by Shynixn")
         }
     }

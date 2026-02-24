@@ -101,4 +101,6 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildLeaveSuccessMessage: LanguageItem
 
   var shyGuildCannotLeaveOwnerGuildMessage: LanguageItem
+
+  var shyGuildThereCannotBeNoOwnerMessage: LanguageItem
 }

@@ -373,7 +373,9 @@ class ShyGuildCommandExecutor(
         val guilds = guildService.getGuildCache()
         sender.sendLanguageMessage(language.shyGuildListGuildsMessage)
         for (guild in guilds) {
-            sender.sendMessage("- ${guild.displayNameColor}" + ChatColor.RESET + " [${guild.displayName}] (${guild.name})")
+            if (sender is Player && guild.isMember(sender)) {
+                sender.sendMessage("- ${guild.displayNameColor}" + ChatColor.RESET + " [${guild.displayName}] (${guild.name})")
+            }
         }
     }
 
@@ -412,6 +414,7 @@ class ShyGuildCommandExecutor(
         targetPlayerData.createdGuilds.remove(guild.name)
         targetPlayerData.guilds.remove(guild.name)
         cachePlayerDataRepository.save(targetPlayerData)
+        guildService.applyGuildMemberPermissions(UUID.fromString(targetPlayerData.playerUUID), guild)
         sender.sendLanguageMessage(language.shyGuildLeaveSuccessMessage, sender.name, guild.name)
     }
 
@@ -581,6 +584,7 @@ class ShyGuildCommandExecutor(
         guildService.saveGuild(guild)
         targetPlayerData.guilds.add(guild.name)
         cachePlayerDataRepository.save(targetPlayerData)
+        guildService.applyGuildMemberPermissions(UUID.fromString(targetPlayerData.playerUUID), guild)
         sender.sendLanguageMessage(language.shyGuildMemberAddSuccessMessage, targetPlayerData.playerName, guild.name)
     }
 
@@ -646,6 +650,7 @@ class ShyGuildCommandExecutor(
         targetPlayerData.guilds.remove(guild.name)
         targetPlayerData.createdGuilds.remove(guild.name)
         cachePlayerDataRepository.save(targetPlayerData)
+        guildService.applyGuildMemberPermissions(UUID.fromString(targetPlayerData.playerUUID), guild)
         sender.sendLanguageMessage(language.shyGuildMemberRemoveSuccessMessage, playerNameOrId, guild.name)
     }
 
@@ -687,6 +692,7 @@ class ShyGuildCommandExecutor(
             guildService.saveGuild(guild)
             playerData.guilds.add(guild.name)
             cachePlayerDataRepository.save(playerData)
+            guildService.applyGuildMemberPermissions(sender.uniqueId, guild)
             sender.sendLanguageMessage(language.shyGuildMemberAcceptSuccessMessage, guildName)
         } else {
             sender.sendLanguageMessage(language.shyGuildMemberAcceptNoInviteMessage, guildName)
@@ -761,6 +767,11 @@ class ShyGuildCommandExecutor(
         }
 
         guildService.deleteGuild(guild)
+        val memberCopy = ArrayList(guild.members)
+        guild.members.clear()
+        for (member in memberCopy) {
+            guildService.applyGuildMemberPermissions(UUID.fromString(member.playerUUID), guild)
+        }
         sender.sendLanguageMessage(language.shyGuildDeleteSuccessMessage, guild.name)
     }
 

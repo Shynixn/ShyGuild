@@ -51,6 +51,7 @@ class GuildServiceImpl(
                 // Check if the guild is still in the cache and only then update it.
                 for (newGuild in newGuilds) {
                     if (guilds.containsKey(newGuild.key)) {
+                        newGuild.value.template = templateService.getAll().firstOrNull { e -> e.name == newGuild.value.templateName }
                         guilds[newGuild.key] = newGuild.value
                     }
                 }
@@ -197,6 +198,10 @@ class GuildServiceImpl(
                 return false
             }
 
+            if (openInvites.firstOrNull { e -> e.receiverUUID == invite.receiverUUID } != null) {
+                return false
+            }
+
             openInvites.add(invite)
             sentInvites[invite.senderUUID] = openInvites
         } else {
@@ -223,7 +228,15 @@ class GuildServiceImpl(
 
         receivedInvites[invitedUUID] = invites.filter { e -> e.guildName != name }.toMutableList()
         sentInvites[guildInvite.senderUUID] =
-            sentInvites[guildInvite.senderUUID]!!.filter { e -> e.receiverUUID == invitedUUID }.toMutableList()
+            sentInvites[guildInvite.senderUUID]!!.filter { e -> e.receiverUUID != invitedUUID }.toMutableList()
+
+        if (receivedInvites[invitedUUID]!!.isEmpty()) {
+            receivedInvites.remove(invitedUUID)
+        }
+        if (sentInvites[guildInvite.senderUUID]!!.isEmpty()) {
+            sentInvites.remove(guildInvite.senderUUID)
+        }
+
         return true
     }
 

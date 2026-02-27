@@ -67,18 +67,18 @@ class LuckPermsPermissionServiceImpl(private val plugin: Plugin, private val pla
     }
 
     override suspend fun applyRoles(playerUUID: UUID, guild: Guild) {
-        val member = guild.getMember(playerUUID.toString()) ?: return
         val template = guild.template ?: return
 
         withContext(Dispatchers.IO) {
             val user = luckPermsUserManager.loadUser(playerUUID).get()
+            val member = guild.getMember(playerUUID.toString())
 
             for (role in template.roles) {
                 val groupName = "${plugin.name.lowercase(Locale.ENGLISH)}-${guild.name}-${role.name}"
                 val roleNode = InheritanceNode.builder(groupName).build()
                 user.data().remove(roleNode)
 
-                if (member.roles.contains(role.name)) {
+                if (member != null && member.roles.contains(role.name)) {
                     user.data().add(roleNode)
                 }
             }

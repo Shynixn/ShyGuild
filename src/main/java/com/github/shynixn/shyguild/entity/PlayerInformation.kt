@@ -22,9 +22,4 @@ class PlayerInformation : PlayerData {
      * All guilds the player is member of.
      */
     var guilds: MutableSet<String> = HashSet()
-
-    /**
-     * Created guilds by the player.
-     */
-    var createdGuilds: MutableSet<String> = HashSet()
 }

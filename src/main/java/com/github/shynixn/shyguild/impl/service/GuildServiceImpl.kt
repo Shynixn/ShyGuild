@@ -74,7 +74,6 @@ class GuildServiceImpl(
         val result = ArrayList<Guild>()
         val guildNames = HashSet<String>()
         guildNames.addAll(playerInfo.guilds)
-        guildNames.addAll(playerInfo.createdGuilds)
 
         for (guildName in guildNames) {
             if (guilds.containsKey(guildName)) {
@@ -89,7 +88,6 @@ class GuildServiceImpl(
             } else {
                 // Guild was deleted.
                 playerInfo.guilds.remove(guildName)
-                playerInfo.createdGuilds.remove(guildName)
                 cachePlayerDataRepository.save(playerInfo)
             }
         }

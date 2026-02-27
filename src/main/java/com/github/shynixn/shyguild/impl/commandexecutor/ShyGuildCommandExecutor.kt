@@ -411,7 +411,6 @@ class ShyGuildCommandExecutor(
 
         guild.members.remove(member)
         guildService.saveGuild(guild)
-        targetPlayerData.createdGuilds.remove(guild.name)
         targetPlayerData.guilds.remove(guild.name)
         cachePlayerDataRepository.save(targetPlayerData)
         guildService.applyGuildMemberPermissions(UUID.fromString(targetPlayerData.playerUUID), guild)
@@ -476,7 +475,6 @@ class ShyGuildCommandExecutor(
         guildService.saveGuild(guild)
 
         if (role.name == "owner") {
-            targetPlayerData.createdGuilds.add(guild.name)
             cachePlayerDataRepository.save(targetPlayerData)
         }
 
@@ -522,7 +520,6 @@ class ShyGuildCommandExecutor(
         guildService.saveGuild(guild)
 
         if (role.name == "owner") {
-            targetPlayerData.createdGuilds.remove(guild.name)
             cachePlayerDataRepository.save(targetPlayerData)
         }
 
@@ -648,7 +645,6 @@ class ShyGuildCommandExecutor(
         guild.members.remove(member)
         guildService.saveGuild(guild)
         targetPlayerData.guilds.remove(guild.name)
-        targetPlayerData.createdGuilds.remove(guild.name)
         cachePlayerDataRepository.save(targetPlayerData)
         guildService.applyGuildMemberPermissions(UUID.fromString(targetPlayerData.playerUUID), guild)
         sender.sendLanguageMessage(language.shyGuildMemberRemoveSuccessMessage, playerNameOrId, guild.name)
@@ -732,13 +728,14 @@ class ShyGuildCommandExecutor(
                 return
             }
 
-            if (playerData.createdGuilds.size >= settings.maxCreateGuildsPerPlayer) {
+            val guildsWherePlayerIsOwner = guildService.getGuildCache().filter { e -> e.getMember(sender)?.roles?.contains("owner") == true }
+
+            if (guildsWherePlayerIsOwner.size >= settings.maxCreateGuildsPerPlayer) {
                 sender.sendLanguageMessage(language.shyGuildCreateMaxGuildsReachedMessage, sender.name)
                 return
             }
 
             playerData.guilds.add(guild.name)
-            playerData.createdGuilds.add(guild.name)
             cachePlayerDataRepository.save(playerData)
         }
 
@@ -761,7 +758,6 @@ class ShyGuildCommandExecutor(
             val playerData = cachePlayerDataRepository.getByPlayer(sender)
             if (playerData != null) {
                 playerData.guilds.remove(guild.name)
-                playerData.createdGuilds.remove(guild.name)
                 cachePlayerDataRepository.save(playerData)
             }
         }

@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -407,10 +407,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#complete-permission-reference" class="md-nav__link">
+  <a href="#command-permission-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📋 Complete Permission Reference
+        📋 Command Permission Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guild-specific-permission-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏰 Guild-Specific Permission Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-permissions-work-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 How Permissions Work Together
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💡 How Permissions Work Together">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guild-role-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Guild Role Templates
       
     </span>
   </a>
@@ -527,10 +577,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#complete-permission-reference" class="md-nav__link">
+  <a href="#command-permission-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📋 Complete Permission Reference
+        📋 Command Permission Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guild-specific-permission-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏰 Guild-Specific Permission Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-permissions-work-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 How Permissions Work Together
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💡 How Permissions Work Together">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guild-role-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Guild Role Templates
       
     </span>
   </a>
@@ -558,15 +658,16 @@
 
 
 <h1 id="permissions-guide">Permissions Guide</h1>
-<p>This guide explains all permission nodes available in ShyScoreboard and how to properly configure them for your server. Understanding permissions is crucial for controlling who can see which scoreboards and who can manage them.</p>
+<p>This guide explains all permission nodes available in ShyGuild and how to properly configure them for your server. Understanding permissions is crucial for controlling who can use commands and manage guilds.</p>
 <h2 id="permission-levels">🔐 Permission Levels</h2>
-<p>ShyScoreboard uses two permission levels:</p>
+<p>ShyGuild uses two permission levels:</p>
 <ul>
-<li><strong>👤 User Level</strong>: Permissions that regular players can have</li>
+<li><strong>👤 User Level</strong>: Permissions that regular players can have (typically assigned via guild role templates and LuckPerms)</li>
 <li><strong>🛡️ Admin Level</strong>: Permissions that should only be given to trusted staff</li>
 </ul>
 <hr />
-<h2 id="complete-permission-reference">📋 Complete Permission Reference</h2>
+<h2 id="command-permission-reference">📋 Command Permission Reference</h2>
+<p>These permissions control who can <strong>execute</strong> each command.</p>
 <table>
 <thead>
 <tr>
@@ -578,55 +679,215 @@
 </thead>
 <tbody>
 <tr>
-<td><code>shyscoreboard.scoreboard.*</code></td>
+<td><code>shyguild.command</code></td>
 <td>👤 User</td>
-<td>Access to <strong>all</strong> scoreboards</td>
-<td>Seeing any scoreboard</td>
-</tr>
-<tr>
-<td><code>shyscoreboard.scoreboard.&lt;name&gt;</code></td>
-<td>👤 User</td>
-<td>Access to a <strong>specific</strong> scoreboard</td>
-<td>Seeing named scoreboard</td>
-</tr>
-<tr>
-<td><code>shyscoreboard.command</code></td>
-<td>🛡️ Admin</td>
-<td>Use the base <code>/shyscoreboard</code> command</td>
+<td>Use the base <code>/shyguild</code> command</td>
 <td>Running any command</td>
 </tr>
 <tr>
-<td><code>shyscoreboard.reload</code></td>
-<td>🛡️ Admin</td>
-<td>Reload plugin configurations</td>
-<td><code>/shyscoreboard reload</code></td>
+<td><code>shyguild.cmd.create</code></td>
+<td>👤 User</td>
+<td>Create new guilds</td>
+<td><code>/shyguild create</code></td>
 </tr>
 <tr>
-<td><code>shyscoreboard.add</code></td>
-<td>🛡️ Admin</td>
-<td>Add scoreboards to players</td>
-<td><code>/shyscoreboard add</code></td>
+<td><code>shyguild.cmd.delete</code></td>
+<td>👤 User</td>
+<td>Delete guilds</td>
+<td><code>/shyguild delete</code></td>
 </tr>
 <tr>
-<td><code>shyscoreboard.set</code></td>
-<td>🛡️ Admin</td>
-<td>Set specific scoreboard for players</td>
-<td><code>/shyscoreboard set</code></td>
+<td><code>shyguild.cmd.guild.list</code></td>
+<td>👤 User</td>
+<td>List all joined guilds</td>
+<td><code>/shyguild guild list</code></td>
 </tr>
 <tr>
-<td><code>shyscoreboard.remove</code></td>
-<td>🛡️ Admin</td>
-<td>Remove scoreboards from players</td>
-<td><code>/shyscoreboard remove</code></td>
+<td><code>shyguild.template.&lt;template&gt;</code></td>
+<td>👤 User</td>
+<td>Use a specific guild template</td>
+<td>Creating a guild with that template</td>
 </tr>
 <tr>
-<td><code>shyscoreboard.update</code></td>
+<td><code>shyguild.cmd.role.add</code></td>
+<td>👤 User</td>
+<td>Assign roles to guild members</td>
+<td><code>/shyguild role add</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.role.remove</code></td>
+<td>👤 User</td>
+<td>Remove roles from guild members</td>
+<td><code>/shyguild role remove</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.role.list</code></td>
+<td>👤 User</td>
+<td>List roles of a guild or player</td>
+<td><code>/shyguild role list</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.member.remove</code></td>
+<td>👤 User</td>
+<td>Remove players from a guild</td>
+<td><code>/shyguild member remove</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.member.list</code></td>
+<td>👤 User</td>
+<td>List members of a guild</td>
+<td><code>/shyguild member list</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.member.invite</code></td>
+<td>👤 User</td>
+<td>Invite players to a guild</td>
+<td><code>/shyguild member invite</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.member.accept</code></td>
+<td>👤 User</td>
+<td>Accept a pending guild invite</td>
+<td><code>/shyguild member accept</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.member.leave</code></td>
+<td>👤 User</td>
+<td>Leave a guild</td>
+<td><code>/shyguild member leave</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.member.add</code></td>
 <td>🛡️ Admin</td>
-<td>Refresh player scoreboards</td>
-<td><code>/shyscoreboard update</code></td>
+<td>Add players directly to a guild</td>
+<td><code>/shyguild member add</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.template.list</code></td>
+<td>🛡️ Admin</td>
+<td>List all loaded guild templates</td>
+<td><code>/shyguild template list</code></td>
+</tr>
+<tr>
+<td><code>shyguild.cmd.reload</code></td>
+<td>🛡️ Admin</td>
+<td>Reload all configurations</td>
+<td><code>/shyguild reload</code></td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="guild-specific-permission-reference">🏰 Guild-Specific Permission Reference</h2>
+<p>These permissions control <strong>per-guild</strong> actions. They are typically assigned at guild template level. Do not assign these manually.</p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Level</th>
+<th>Description</th>
+<th>Required For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.delete</code></td>
+<td>👤 User</td>
+<td>Delete a specific guild</td>
+<td><code>/shyguild delete &lt;guild&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.role.add.&lt;role&gt;</code></td>
+<td>👤 User</td>
+<td>Assign a specific role in a guild</td>
+<td><code>/shyguild role add &lt;guild&gt; &lt;role&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.role.remove.&lt;role&gt;</code></td>
+<td>👤 User</td>
+<td>Remove a specific role in a guild</td>
+<td><code>/shyguild role remove &lt;guild&gt; &lt;role&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.role.list</code></td>
+<td>👤 User</td>
+<td>List roles in a specific guild</td>
+<td><code>/shyguild role list &lt;guild&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.member.add</code></td>
+<td>🛡️ Admin</td>
+<td>Add members to a specific guild</td>
+<td><code>/shyguild member add &lt;guild&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.member.remove</code></td>
+<td>👤 User</td>
+<td>Remove members from a specific guild</td>
+<td><code>/shyguild member remove &lt;guild&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.member.list</code></td>
+<td>👤 User</td>
+<td>List members of a specific guild</td>
+<td><code>/shyguild member list &lt;guild&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.member.invite</code></td>
+<td>👤 User</td>
+<td>Invite players to a specific guild</td>
+<td><code>/shyguild member invite &lt;guild&gt;</code></td>
+</tr>
+<tr>
+<td><code>shyguild.guild.&lt;guild&gt;.member.leave</code></td>
+<td>👤 User</td>
+<td>Leave a specific guild</td>
+<td><code>/shyguild member leave &lt;guild&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="how-permissions-work-together">💡 How Permissions Work Together</h2>
+<p>Each command requires <strong>two</strong> permission checks:</p>
+<ol>
+<li><strong>Command permission</strong> (e.g., <code>shyguild.cmd.delete</code>) — allows the player to use the command at all</li>
+<li><strong>Guild-specific permission</strong> (e.g., <code>shyguild.guild.my-guild.delete</code>) — allows the action on that particular guild</li>
+</ol>
+<p>Both must be granted for the action to succeed.</p>
+<h3 id="example">Example</h3>
+<p>For a player to delete a guild called <code>warriors</code>:
+<div class="highlight"><pre><span></span><code>shyguild.command              # Base command access
+shyguild.cmd.delete           # Permission to use /shyguild delete
+shyguild.guild.warriors.delete # Permission to delete this specific guild
+</code></pre></div></p>
+<hr />
+<h2 id="guild-role-templates">🔧 Guild Role Templates</h2>
+<p>Guild-specific permissions are typically <strong>not assigned manually</strong>. Instead, they are defined in guild templates and automatically managed by ShyGuild via LuckPerms.</p>
+<p>For example, the default <code>sample_guild</code> template assigns these permissions to the <code>owner</code> role:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">roles</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;owner&quot;</span>
+<span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.delete&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.owner&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.owner&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.member&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.member&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.remove&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.invite&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;member&quot;</span>
+<span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div>
+<p>The <code>%shyguild_guild_name%</code> placeholder is automatically replaced with the actual guild name when permissions are applied.</p>
+<blockquote>
+<p><strong>Note:</strong> LuckPerms must be installed for automatic role permission management. Without it, guild-specific permissions need to be assigned manually.</p>
+</blockquote>
 
 
 

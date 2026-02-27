@@ -105,4 +105,8 @@ class ShyGuildLanguageImpl : ShyGuildLanguage {
  override var shyGuildCannotLeaveOwnerGuildMessage = LanguageItem(  "[&9ShyGuild&f]&c You cannot leave guild %shyguild_param_1% because you are the only owner. Please assign the owner role to another player and try again.")
 
  override var shyGuildThereCannotBeNoOwnerMessage = LanguageItem(  "[&9ShyGuild&f]&c There has to be at least one owner in guild %shyguild_param_1%. Please assign the owner role to another player before you can remove it from yourself.")
+
+ override var shyGuildListGuildsCommandHint = LanguageItem(  "Lists all guilds you are a member of.")
+
+ override var shyGuildListGuildsMessage = LanguageItem(  "[&9ShyGuild&f] You are a member of the following guilds:")
 }

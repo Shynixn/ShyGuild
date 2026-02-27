@@ -2,6 +2,7 @@ package com.github.shynixn.shyguild.impl.commandexecutor
 
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandBuilder
@@ -11,6 +12,7 @@ import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
+import com.github.shynixn.mcutils.common.translateChatColors
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.shyguild.contract.GuildService
 import com.github.shynixn.shyguild.contract.ShyGuildLanguage
@@ -169,7 +171,13 @@ class ShyGuildCommandExecutor(
                 }
             }
 
-            if (name.length < settings.guildDisplayNameMinLength || name.length > settings.guildDisplayNameMaxLength) {
+            if (name.length > 500) {
+                return null
+            }
+
+            val strippedName = ChatColor.stripChatColors(name.translateChatColors())
+
+            if (strippedName.length < settings.guildDisplayNameMinLength || strippedName.length > settings.guildDisplayNameMaxLength) {
                 return null
             }
 
@@ -217,6 +225,16 @@ class ShyGuildCommandExecutor(
                     builder().argument(settings.guildArgument).validator(guildMustExist).tabs(guildTabs)
                         .execute { sender, guild ->
                             deleteGuild(sender, guild)
+                        }
+                }
+                subCommand("list") {
+                    permission(settings.guildListPermission)
+                    toolTip {
+                        language.shyGuildListGuildsCommandHint.text
+                    }
+                    builder()
+                        .execute { sender ->
+                            listGuilds(sender)
                         }
                 }
                 subCommand("role") {
@@ -349,6 +367,14 @@ class ShyGuildCommandExecutor(
                     }
                 }.helpCommand()
             })
+    }
+
+    private suspend fun listGuilds(sender: CommandSender) {
+        val guilds = guildService.getGuildCache()
+        sender.sendLanguageMessage(language.shyGuildListGuildsMessage)
+        for (guild in guilds) {
+            sender.sendMessage("- ${guild.displayNameColor}" + ChatColor.RESET + " [${guild.displayName}] (${guild.name})")
+        }
     }
 
     private suspend fun leaveGuild(sender: Player, guild: Guild) {
@@ -607,9 +633,18 @@ class ShyGuildCommandExecutor(
             return
         }
 
+        val owners =
+            guild.members.filter { e -> e.roles.contains("owner") && e.playerUUID != member.playerUUID }
+
+        if (owners.isEmpty()) {
+            sender.sendLanguageMessage(language.shyGuildThereCannotBeNoOwnerMessage, guild.name)
+            return
+        }
+
         guild.members.remove(member)
         guildService.saveGuild(guild)
         targetPlayerData.guilds.remove(guild.name)
+        targetPlayerData.createdGuilds.remove(guild.name)
         cachePlayerDataRepository.save(targetPlayerData)
         sender.sendLanguageMessage(language.shyGuildMemberRemoveSuccessMessage, playerNameOrId, guild.name)
     }
@@ -673,8 +708,8 @@ class ShyGuildCommandExecutor(
 
         val guild = Guild().also {
             it.name = guildName
-            it.displayName = name
-            it.displayNameColor = displayName
+            it.displayName = ChatColor.stripChatColors(displayName.translateChatColors())
+            it.displayNameColor = displayName.translateChatColors()
             it.templateName = template.name
         }
 

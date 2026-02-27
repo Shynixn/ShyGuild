@@ -37,5 +37,7 @@ enum class Permission(val text: String) {
 
     CMD_RELOAD("shyguild.cmd.reload"),
 
+    CMD_GUILD_LIST("shyguild.cmd.guild.list"),
+
     CMD_TEMPLATE_LIST("shyguild.cmd.template.list"),
 }

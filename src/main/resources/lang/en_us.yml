@@ -160,3 +160,9 @@ shyGuildCannotLeaveOwnerGuildMessage:
 shyGuildThereCannotBeNoOwnerMessage:
     type: "CHAT"
     text: "[&9ShyGuild&f]&c There has to be at least one owner in guild %shyguild_param_1%. Please assign the owner role to another player before you can remove it from yourself."
+shyGuildListGuildsCommandHint:
+    type: "CHAT"
+    text: "Lists all guilds you are a member of."
+shyGuildListGuildsMessage:
+    type: "CHAT"
+    text: "[&9ShyGuild&f] You are a member of the following guilds:"

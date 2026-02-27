@@ -19,14 +19,10 @@ enum class PlaceHolder(
         guild?.name
     }),
     GUILD_DISPLAY_NAME("guild_displayName", { _, guild, context ->
-        if (guild != null) {
-            ChatColor.stripChatColors(guild.displayName.translateChatColors())
-        } else {
-            null
-        }
+        guild?.displayName
     }),
     GUILD_DISPLAY_COLOR("guild_displayNameColor", { _, guild, context ->
-        guild?.displayName?.translateChatColors()
+        guild?.displayNameColor
     }),
     GUILD_MEMBER("guild_member_[role]", { _, guild, context ->
         if (guild != null) {

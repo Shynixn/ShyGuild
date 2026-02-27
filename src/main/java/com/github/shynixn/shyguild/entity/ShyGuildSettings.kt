@@ -72,6 +72,8 @@ class ShyGuildSettings(private val reloadFun: (ShyGuildSettings) -> Unit) {
     var leaveMemberPermission = Permission.CND_MEMBER_LEAVE.text
     var guildMemberLeavePermission = Permission.GUILD_MEMBER_LEAVE.text
 
+    var guildListPermission = Permission.CMD_GUILD_LIST.text
+
     /**
      * Reloads the config.
      */

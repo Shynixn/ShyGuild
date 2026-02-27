@@ -103,4 +103,8 @@ interface ShyGuildLanguage : LanguageProvider {
   var shyGuildCannotLeaveOwnerGuildMessage: LanguageItem
 
   var shyGuildThereCannotBeNoOwnerMessage: LanguageItem
+
+  var shyGuildListGuildsCommandHint: LanguageItem
+
+  var shyGuildListGuildsMessage: LanguageItem
 }

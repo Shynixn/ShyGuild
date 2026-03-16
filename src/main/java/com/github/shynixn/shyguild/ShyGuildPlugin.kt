@@ -12,6 +12,7 @@ import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.database.impl.CommonSqlConnectionServiceImpl
 import com.github.shynixn.mcutils.database.impl.SqliteConnectionServiceImpl
 import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
 import com.github.shynixn.shyguild.contract.GuildService
@@ -131,7 +132,7 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
         settings.reload()
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
         val sqlConnectionService =
-            SqliteConnectionServiceImpl(plugin.dataFolder.toPath().resolve("ShyGuild.sqlite"), plugin.logger)
+            CommonSqlConnectionServiceImpl(plugin, plugin.dataFolder.toPath().resolve("ShyGuild.sqlite"))
         this.module = ShyGuildDependencyInjectionModule(
             this,
             this,

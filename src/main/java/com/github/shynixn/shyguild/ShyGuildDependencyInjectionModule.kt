@@ -66,8 +66,8 @@ class ShyGuildDependencyInjectionModule(
             CachedRepositoryImpl(
                 YamlFileRepositoryImpl<GuildTemplate>(
                     plugin,
-                    "guild",
-                    plugin.dataFolder.toPath().resolve("guild"),
+                   settings.guildArgument,
+                    plugin.dataFolder.toPath().resolve(settings.guildArgument),
                     settings.defaultTemplates,
                     emptyList(),
                     object : TypeReference<GuildTemplate>() {})

@@ -12,6 +12,7 @@ import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.database.impl.CommonSqlConnectionServiceImpl
 import com.github.shynixn.mcutils.database.impl.SqliteConnectionServiceImpl
 import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
 import com.github.shynixn.shyguild.contract.GuildService
@@ -80,10 +81,11 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
                 Version.VERSION_1_21_R4,
                 Version.VERSION_1_21_R5,
                 Version.VERSION_1_21_R6,
-                Version.VERSION_1_21_R7
+                Version.VERSION_1_21_R7,
+                Version.VERSION_26_R1
             )
         } else {
-            listOf(Version.VERSION_1_21_R7)
+            listOf(Version.VERSION_26_R1)
         }
 
         if (!Version.serverVersion.isCompatible(*versions.toTypedArray())) {
@@ -131,7 +133,7 @@ class ShyGuildPlugin : JavaPlugin(), CoroutineHandler {
         settings.reload()
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
         val sqlConnectionService =
-            SqliteConnectionServiceImpl(plugin.dataFolder.toPath().resolve("ShyGuild.sqlite"), plugin.logger)
+            CommonSqlConnectionServiceImpl(plugin, plugin.dataFolder.toPath().resolve("ShyGuild.sqlite"))
         this.module = ShyGuildDependencyInjectionModule(
             this,
             this,

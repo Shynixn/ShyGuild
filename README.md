@@ -10,7 +10,7 @@ ShyGuild is a modern, template-based guild plugin for Bukkit and Folia based Min
 * Role hierarchy and member management (owner/officer/member)
 * Multi-guild support and full create/manage/delete workflow
 * Bukkit and Folia compatible; PlaceholderAPI support
-* SQLite and MySQL support; supports Minecraft 1.8.R3 - 1.21.R7
+* SQLite and MySQL support
 
 ## Installation
 

@@ -96,6 +96,7 @@ fun registerPluginJar(
             relocate("org.intellij", "com.github.shynixn.shyguild.lib.org.intellij")
             relocate("org.jetbrains", "com.github.shynixn.shyguild.lib.org.jetbrains")
             relocate("javax", "com.github.shynixn.shyguild.lib.javax")
+            relocate("com.zaxxer", "com.github.shynixn.shyguild.lib.com.zaxxer")
         }
     }
 
@@ -131,6 +132,7 @@ fun registerPluginJar(
         exclude("org/**")
         exclude("kotlinx/**")
         exclude("javax/**")
+        exclude("com/zaxxer/**")
 
         if (excludeOldNms) {
             val oldNmsPaths = listOf(

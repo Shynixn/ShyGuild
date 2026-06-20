@@ -1,3 +1,8 @@
+### ShyGuild (Premium)
+
+* For Minecraft 1.8.9 - 26.2
+* Supports [Folia](https://papermc.io/software/folia)
+* Download: https://www.patreon.com/Shynixn
 
 ### ShyGuild (Free)
 

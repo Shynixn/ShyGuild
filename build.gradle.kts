@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "1.2.0"
+version = "1.2.1"
 
 repositories {
     mavenCentral()
@@ -29,8 +29,8 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:2026.11")
-    implementation("com.github.shynixn.mcutils:packet:2026.23")
+    implementation("com.github.shynixn.mcutils:common:2026.13")
+    implementation("com.github.shynixn.mcutils:packet:2026.24")
     implementation("com.github.shynixn.mcutils:database:2026.3")
 
     // Test

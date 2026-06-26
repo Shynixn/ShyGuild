@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 1.2.1
+
+### Bugs/Issues
+
+* Fixed a version detection bug on Paper 26.2 builds.
+
+---
+
 ## Release 1.2.0
 
 ### Changes

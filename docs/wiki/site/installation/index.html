@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -1116,17 +1116,17 @@
 <h2 id="understanding-the-configyml">📂 Understanding the config.yml</h2>
 <p>The main configuration file controls global settings:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Language file to use</span>
-<span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;en_us&quot;</span>
+<span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="s">"en_us"</span>
 
 <span class="c1"># Command aliases</span>
 <span class="nt">commands</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">shyguild</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">aliases</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;sguild&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"sguild"</span>
 
 <span class="c1"># Database settings (sqlite or mysql)</span>
 <span class="nt">database</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sqlite&quot;</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"sqlite"</span>
 
 <span class="c1"># Global guild settings</span>
 <span class="nt">global</span><span class="p">:</span>
@@ -1140,34 +1140,34 @@
 <span class="w">  </span><span class="nt">guildDisplayNameMaxLength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span><span class="w">   </span><span class="c1"># Max characters for display names</span>
 <span class="w">  </span><span class="nt">guildMaxInvites</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">              </span><span class="c1"># Max pending invites per player</span>
 <span class="w">  </span><span class="nt">blackList</span><span class="p">:</span><span class="w">                      </span><span class="c1"># Blocked words for guild names</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;badword&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"badword"</span>
 </code></pre></div>
 <hr />
 <h2 id="using-the-sample-guild-template">🏰 Using the Sample Guild Template</h2>
 <p>ShyGuild ships with a <code>sample_guild.yml</code> template in the <code>plugins/ShyGuild/guild/</code> folder. This section walks through using it from both an admin and a player perspective.</p>
 <h3 id="understanding-the-sample-template">Understanding the Sample Template</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample_guild&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"sample_guild"</span>
 <span class="nt">maxPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;member&quot;</span>
+<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">"member"</span>
 <span class="nt">roles</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;owner&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"owner"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.delete&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.owner&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.owner&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.member&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.member&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.remove&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.invite&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.delete"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.owner"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.owner"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.member"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.member"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.remove"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.invite"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.leave"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;member&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"member"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.leave"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div>
 <p><strong>Key points:</strong></p>
@@ -1246,58 +1246,58 @@ See the <a href="../permission/">permissions</a> page.</p>
 <p>This example shows how to create a custom guild template with four roles — <code>owner</code>, <code>coach</code>, <code>captain</code>, and <code>player</code> — to manage a soccer club on your server.</p>
 <h3 id="step-1-create-the-template-file">Step 1: Create the Template File</h3>
 <p>Create a new file at <code>plugins/ShyGuild/guild/soccer_club.yml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;soccer_club&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"soccer_club"</span>
 <span class="nt">maxPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;player&quot;</span>
+<span class="nt">defaultRole</span><span class="p">:</span><span class="w"> </span><span class="s">"player"</span>
 <span class="nt">roles</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># The club owner has full control over the guild</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;owner&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"owner"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.delete&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.owner&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.owner&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.coach&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.coach&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.remove&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.invite&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.delete"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.owner"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.owner"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.coach"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.coach"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.remove"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.invite"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.leave"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
 <span class="w">  </span><span class="c1"># Coaches can manage captains and players, but cannot delete the club or assign owners</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;coach&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"coach"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.captain&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.add.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.remove.player&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.remove&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.invite&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.captain"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.add.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.remove.player"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.remove"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.invite"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.leave"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
 <span class="w">  </span><span class="c1"># Captains can invite new players and view the roster, but cannot manage roles</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;captain&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"captain"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.invite&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.invite"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.leave"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
 <span class="w">  </span><span class="c1"># Regular players can only view the roster and leave</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;player&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"player"</span>
 <span class="w">    </span><span class="nt">allowPermissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.role.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.member.list&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;shyguild.guild.%shyguild_guild_name%.leave&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.role.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.member.list"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"shyguild.guild.%shyguild_guild_name%.leave"</span>
 <span class="w">    </span><span class="nt">denyPermissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div>
 <h3 id="step-2-set-up-permissions">Step 2: Set Up Permissions</h3>
@@ -1525,7 +1525,7 @@ See the <a href="../permission/">permissions</a> page.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "content.tabs.link", "content.code.copy", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

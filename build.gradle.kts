@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "1.2.1"
+version = "1.3.0"
 
 repositories {
     mavenCentral()
@@ -29,8 +29,8 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:2026.13")
-    implementation("com.github.shynixn.mcutils:packet:2026.24")
+    implementation("com.github.shynixn.mcutils:common:2026.18")
+    implementation("com.github.shynixn.mcutils:packet:2026.29")
     implementation("com.github.shynixn.mcutils:database:2026.3")
 
     // Test
@@ -155,7 +155,8 @@ fun registerPluginJar(
                 "com/github/shynixn/shyguild/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R5/**",
                 "com/github/shynixn/shyguild/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R6/**",
                 "com/github/shynixn/shyguild/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R7/**",
-                "com/github/shynixn/shyguild/lib/com/github/shynixn/mcutils/packet/nms/v26_1_R1/**"
+                "com/github/shynixn/shyguild/lib/com/github/shynixn/mcutils/packet/nms/v26_1_R1/**",
+                "com/github/shynixn/shyguild/lib/com/github/shynixn/mcutils/packet/nms/v26_2_R1/**"
             )
             for (path in oldNmsPaths) exclude(path)
         }
